@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>v2 ELAN Server - Arma Reforger Crafting System</title>
+  <title>v3 ELAN Server - Arma Reforger Crafting System</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
@@ -431,6 +431,11 @@
     .empty-cell {
       background-color: var(--bg-light) !important;
     }
+
+    .separator-row {
+      height: 10px;
+      background-color: var(--bg-medium);
+    }
   </style>
 </head>
 <body>
@@ -501,11 +506,6 @@
                 <div class="table-container">
                   <table class="components-table">
                     <thead>
-                      <tr>
-                        <th colspan="2" class="table-section">Primary Component</th>
-                        <th colspan="2" class="table-section">Secondary Materials</th>
-                        <th colspan="2" class="table-section">Base Materials</th>
-                      </tr>
                       <tr>
                         <th>Item</th>
                         <th class="text-center">Quantity</th>
@@ -834,12 +834,31 @@
             // Update components table
             componentsTableEl.innerHTML = '';
 
+            // Check if any item has base materials
+            let hasBaseMaterials = false;
             currentItem.items.forEach(item => {
+              const hasSubMaterials = item.subMaterials && Object.keys(item.subMaterials).length > 0;
+              if (hasSubMaterials) {
+                hasBaseMaterials = true;
+              }
+            });
+
+            // Update table headers based on whether base materials exist
+            const tableHeaders = document.querySelector('.components-table thead tr');
+            tableHeaders.innerHTML = `
+              <th>Item</th>
+              <th class="text-center">Quantity</th>
+              <th>Material</th>
+              <th class="text-center">Quantity</th>
+              ${hasBaseMaterials ? '<th>Material</th><th class="text-center">Quantity</th>' : ''}
+            `;
+
+            // Process each component
+            for (let itemIndex = 0; itemIndex < currentItem.items.length; itemIndex++) {
+              const item = currentItem.items[itemIndex];
+              
               // Check if this item has submaterials
               const hasSubMaterials = item.subMaterials && Object.keys(item.subMaterials).length > 0;
-              
-              // For each primary component
-              let rowsAdded = 0;
               
               // Create the first row with the primary component
               const firstRow = document.createElement('tr');
@@ -859,11 +878,13 @@
                 
                 // Check if this material has submaterials
                 if (hasSubMaterials && item.subMaterials[item.materials[0].name] && item.subMaterials[item.materials[0].name].length > 0) {
-                  firstRowHTML += `
-                    <td class="${getMaterialColorClass(item.subMaterials[item.materials[0].name][0].name)}">${item.subMaterials[item.materials[0].name][0].name}</td>
-                    <td class="text-center">${item.subMaterials[item.materials[0].name][0].quantity}</td>
-                  `;
-                } else {
+                  if (hasBaseMaterials) {
+                    firstRowHTML += `
+                      <td class="${getMaterialColorClass(item.subMaterials[item.materials[0].name][0].name)}">${item.subMaterials[item.materials[0].name][0].name}</td>
+                      <td class="text-center">${item.subMaterials[item.materials[0].name][0].quantity}</td>
+                    `;
+                  }
+                } else if (hasBaseMaterials) {
                   firstRowHTML += `
                     <td></td>
                     <td></td>
@@ -873,9 +894,13 @@
                 firstRowHTML += `
                   <td></td>
                   <td></td>
-                  <td></td>
-                  <td></td>
                 `;
+                if (hasBaseMaterials) {
+                  firstRowHTML += `
+                    <td></td>
+                    <td></td>
+                  `;
+                }
               }
               
               firstRow.innerHTML = firstRowHTML;
@@ -886,14 +911,21 @@
                 for (let i = 1; i < item.subMaterials[item.materials[0].name].length; i++) {
                   const subMaterial = item.subMaterials[item.materials[0].name][i];
                   const subRow = document.createElement('tr');
-                  subRow.innerHTML = `
+                  let subRowHTML = `
                     <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td class="${getMaterialColorClass(subMaterial.name)}">${subMaterial.name}</td>
-                    <td class="text-center">${subMaterial.quantity}</td>
                   `;
+                  
+                  if (hasBaseMaterials) {
+                    subRowHTML += `
+                      <td class="${getMaterialColorClass(subMaterial.name)}">${subMaterial.name}</td>
+                      <td class="text-center">${subMaterial.quantity}</td>
+                    `;
+                  }
+                  
+                  subRow.innerHTML = subRowHTML;
                   componentsTableEl.appendChild(subRow);
                 }
               }
@@ -912,10 +944,12 @@
                 
                 // Check if this material has submaterials
                 if (hasSubMaterials && item.subMaterials[material.name] && item.subMaterials[material.name].length > 0) {
-                  materialRowHTML += `
-                    <td class="${getMaterialColorClass(item.subMaterials[material.name][0].name)}">${item.subMaterials[material.name][0].name}</td>
-                    <td class="text-center">${item.subMaterials[material.name][0].quantity}</td>
-                  `;
+                  if (hasBaseMaterials) {
+                    materialRowHTML += `
+                      <td class="${getMaterialColorClass(item.subMaterials[material.name][0].name)}">${item.subMaterials[material.name][0].name}</td>
+                      <td class="text-center">${item.subMaterials[material.name][0].quantity}</td>
+                    `;
+                  }
                   
                   materialRow.innerHTML = materialRowHTML;
                   componentsTableEl.appendChild(materialRow);
@@ -924,27 +958,44 @@
                   for (let j = 1; j < item.subMaterials[material.name].length; j++) {
                     const subMaterial = item.subMaterials[material.name][j];
                     const subRow = document.createElement('tr');
-                    subRow.innerHTML = `
+                    let subRowHTML = `
                       <td></td>
                       <td></td>
                       <td></td>
                       <td></td>
-                      <td class="${getMaterialColorClass(subMaterial.name)}">${subMaterial.name}</td>
-                      <td class="text-center">${subMaterial.quantity}</td>
                     `;
+                    
+                    if (hasBaseMaterials) {
+                      subRowHTML += `
+                        <td class="${getMaterialColorClass(subMaterial.name)}">${subMaterial.name}</td>
+                        <td class="text-center">${subMaterial.quantity}</td>
+                      `;
+                    }
+                    
+                    subRow.innerHTML = subRowHTML;
                     componentsTableEl.appendChild(subRow);
                   }
                 } else {
-                  materialRowHTML += `
-                    <td></td>
-                    <td></td>
-                  `;
+                  if (hasBaseMaterials) {
+                    materialRowHTML += `
+                      <td></td>
+                      <td></td>
+                    `;
+                  }
                   
                   materialRow.innerHTML = materialRowHTML;
                   componentsTableEl.appendChild(materialRow);
                 }
               }
-            });
+              
+              // Add a separator row if this is not the last item
+              if (itemIndex < currentItem.items.length - 1) {
+                const separatorRow = document.createElement('tr');
+                let separatorHTML = `<td colspan="${hasBaseMaterials ? 6 : 4}" style="height: 10px; background-color: var(--bg-medium);"></td>`;
+                separatorRow.innerHTML = separatorHTML;
+                componentsTableEl.appendChild(separatorRow);
+              }
+            }
             
             // Update materials table
             materialsTableEl.innerHTML = '';
