@@ -1,270 +1,374 @@
 {
-"base": {
-    "name": "Base",
+    "base": {
+        "name": "Base",
         "items": [
-          {
-            "id": "test1",
-            "title": "test1",
-            "quantity": 1,
-            "items": [
-              {
-                "name": "Weapon part",
-                "quantity": 55,
-                "materials": [
-                  { "name": "Iron ingot", "quantity": 55 },
-                  { "name": "Copper ingot", "quantity": 55 }
-                ]
-              },
-              {
-                "name": "Stabilizer",
-                "quantity": 30,
-                "materials": [
-                  { "name": "Iron ingot", "quantity": 60 },
-                  { "name": "Gold ingot", "quantity": 30 }
-                ]
-              },
-              {
-                "name": "Attachment Part",
-                "quantity": 34,
-                "materials": [
-                  { "name": "Copper ingot", "quantity": 68 },
-                  { "name": "Silver ingot", "quantity": 34 }
-                ]
-              }
-            ],
-            "totalMaterials": [
-              { "name": "Iron ingot", "quantity": 115 },
-              { "name": "Copper ingot", "quantity": 123 },
-              { "name": "Gold ingot", "quantity": 30 },
-              { "name": "Silver ingot", "quantity": 34 }
-            ],
-            "imageUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png"
-          },
-		  {
-            "id": "test2",
-            "title": "test",
-            "quantity": 1,
-            "items": [
-              {
-                "name": "Weapon part",
-                "quantity": 55,
-                "materials": [
-                  { "name": "Iron ingot", "quantity": 55 },
-                  { "name": "Copper ingot", "quantity": 55 }
-                ]
-              },
-              {
-                "name": "Stabilizer",
-                "quantity": 30,
-                "materials": [
-                  { "name": "Iron ingot", "quantity": 60 },
-                  { "name": "Gold ingot", "quantity": 30 }
-                ]
-              },
-              {
-                "name": "Attachment Part",
-                "quantity": 34,
-                "materials": [
-                  { "name": "Copper ingot", "quantity": 68 },
-                  { "name": "Silver ingot", "quantity": 34 }
-                ]
-              }
-            ],
-            "totalMaterials": [
-              { "name": "Iron ingot", "quantity": 115 },
-              { "name": "Copper ingot", "quantity": 123 },
-              { "name": "Gold ingot", "quantity": 30 },
-              { "name": "Silver ingot", "quantity": 34 }
-            ],
-            "imageUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png"
-          }
-        ]
-      }
-  },
-  "weapons": {
-    "name": "Weapons",
-    "subcategories": {
-      "assault": {
-        "name": "Assault Rifles",
-        "items": [
-          {
-            "id": "sig-mcx",
-            "title": "SIG MCX",
-            "quantity": 1,
-            "items": [
-              {
-                "name": "Weapon part",
-                "quantity": 55,
-                "materials": [
-                  { "name": "Iron ingot", "quantity": 55 },
-                  { "name": "Copper ingot", "quantity": 55 }
-                ]
-              },
-              {
-                "name": "Stabilizer",
-                "quantity": 30,
-                "materials": [
-                  { "name": "Iron ingot", "quantity": 60 },
-                  { "name": "Gold ingot", "quantity": 30 }
-                ]
-              },
-              {
-                "name": "Attachment Part",
-                "quantity": 34,
-                "materials": [
-                  { "name": "Copper ingot", "quantity": 68 },
-                  { "name": "Silver ingot", "quantity": 34 }
-                ]
-              }
-            ],
-            "totalMaterials": [
-              { "name": "Iron ingot", "quantity": 115 },
-              { "name": "Copper ingot", "quantity": 123 },
-              { "name": "Gold ingot", "quantity": 30 },
-              { "name": "Silver ingot", "quantity": 34 }
-            ],
-            "imageUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png"
-          }
-        ]
-      }
-    }
-  },
-  "ammunition": {
-    "name": "Ammunition",
-    "subcategories": {
-      "magazines": {
-        "name": "Magazines",
-        "items": [
-          {
-            "id": "9x19-mag",
-            "title": "30rnd 9x19 Mag",
-            "quantity": 1,
-            "items": [
-              {
-                "name": "Ammo",
+            {
+                "id": "test1",
+                "title": "Test1",
                 "quantity": 1,
-                "materials": [
-                  { "name": "Iron ingot", "quantity": 1 },
-                  { "name": "Charcoal", "quantity": 1 }
-                ]
-              }
-            ],
-            "totalMaterials": [
-              { "name": "Iron ingot", "quantity": 1 },
-              { "name": "Charcoal", "quantity": 1 }
-            ],
-            "imageUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png"
-          },
-          {
-            "id": "300-mag",
-            "title": ".300 Blackout Magazine",
-            "quantity": 1,
-            "items": [
-              {
-                "name": "Ammo",
-                "quantity": 2,
-                "materials": [
-                  { "name": "Iron ingot", "quantity": 2 },
-                  { "name": "Charcoal", "quantity": 2 }
-                ]
-              }
-            ],
-            "totalMaterials": [
-              { "name": "Iron ingot", "quantity": 2 },
-              { "name": "Charcoal", "quantity": 2 }
-            ],
-            "imageUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png"
-          }
+                "items": [
+                    {
+                        "name": "Ammo",
+                        "quantity": 1,
+                        "materials": [
+                            {
+                                "name": "Iron ingot",
+                                "quantity": 1
+                            },
+                            {
+                                "name": "Charcoal",
+                                "quantity": 1
+                            }
+                        ]
+                    }
+                ],
+                "totalMaterials": [
+                    {
+                        "name": "Iron ingot",
+                        "quantity": 1
+                    },
+                    {
+                        "name": "Charcoal",
+                        "quantity": 1
+                    }
+                ],
+                "imageUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png"
+            },
+            {
+                "id": "test2",
+                "title": "Test 2",
+                "quantity": 1,
+                "items": [
+                    {
+                        "name": "Ammo",
+                        "quantity": 2,
+                        "materials": [
+                            {
+                                "name": "Iron ingot",
+                                "quantity": 2
+                            },
+                            {
+                                "name": "Charcoal",
+                                "quantity": 2
+                            }
+                        ]
+                    }
+                ],
+                "totalMaterials": [
+                    {
+                        "name": "Iron ingot",
+                        "quantity": 2
+                    },
+                    {
+                        "name": "Charcoal",
+                        "quantity": 2
+                    }
+                ],
+                "imageUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png"
+            }
         ]
-      }
+    },
+    "weapons": {
+        "name": "Weapons",
+        "subcategories": {
+            "assault": {
+                "name": "Assault Rifles",
+                "items": [
+                    {
+                        "id": "sig-mcx",
+                        "title": "SIG MCX",
+                        "quantity": 1,
+                        "items": [
+                            {
+                                "name": "Weapon part",
+                                "quantity": 55,
+                                "materials": [
+                                    {
+                                        "name": "Iron ingot",
+                                        "quantity": 55
+                                    },
+                                    {
+                                        "name": "Copper ingot",
+                                        "quantity": 55
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "Stabilizer",
+                                "quantity": 30,
+                                "materials": [
+                                    {
+                                        "name": "Iron ingot",
+                                        "quantity": 60
+                                    },
+                                    {
+                                        "name": "Gold ingot",
+                                        "quantity": 30
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "Attachment Part",
+                                "quantity": 34,
+                                "materials": [
+                                    {
+                                        "name": "Copper ingot",
+                                        "quantity": 68
+                                    },
+                                    {
+                                        "name": "Silver ingot",
+                                        "quantity": 34
+                                    }
+                                ]
+                            }
+                        ],
+                        "totalMaterials": [
+                            {
+                                "name": "Iron ingot",
+                                "quantity": 115
+                            },
+                            {
+                                "name": "Copper ingot",
+                                "quantity": 123
+                            },
+                            {
+                                "name": "Gold ingot",
+                                "quantity": 30
+                            },
+                            {
+                                "name": "Silver ingot",
+                                "quantity": 34
+                            }
+                        ],
+                        "imageUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png"
+                    }
+                ]
+            }
+        }
+    },
+    "ammunition": {
+        "name": "Ammunition",
+        "subcategories": {
+            "magazines": {
+                "name": "Magazines",
+                "items": [
+                    {
+                        "id": "9x19-mag",
+                        "title": "30rnd 9x19 Mag",
+                        "quantity": 1,
+                        "items": [
+                            {
+                                "name": "Ammo",
+                                "quantity": 1,
+                                "materials": [
+                                    {
+                                        "name": "Iron ingot",
+                                        "quantity": 1
+                                    },
+                                    {
+                                        "name": "Charcoal",
+                                        "quantity": 1
+                                    }
+                                ]
+                            }
+                        ],
+                        "totalMaterials": [
+                            {
+                                "name": "Iron ingot",
+                                "quantity": 1
+                            },
+                            {
+                                "name": "Charcoal",
+                                "quantity": 1
+                            }
+                        ],
+                        "imageUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png"
+                    },
+                    {
+                        "id": "300-mag",
+                        "title": ".300 Blackout Magazine",
+                        "quantity": 1,
+                        "items": [
+                            {
+                                "name": "Ammo",
+                                "quantity": 2,
+                                "materials": [
+                                    {
+                                        "name": "Iron ingot",
+                                        "quantity": 2
+                                    },
+                                    {
+                                        "name": "Charcoal",
+                                        "quantity": 2
+                                    }
+                                ]
+                            }
+                        ],
+                        "totalMaterials": [
+                            {
+                                "name": "Iron ingot",
+                                "quantity": 2
+                            },
+                            {
+                                "name": "Charcoal",
+                                "quantity": 2
+                            }
+                        ],
+                        "imageUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png"
+                    }
+                ]
+            }
+        }
+    },
+    "vehicles": {
+        "name": "Vehicles",
+        "subcategories": {
+            "cars": {
+                "name": "Cars",
+                "items": []
+            },
+            "trucks": {
+                "name": "Trucks",
+                "items": [
+                    {
+                        "id": "ural-device",
+                        "title": "Ural Device",
+                        "quantity": 1,
+                        "items": [
+                            {
+                                "name": "Mechanical component (HQ)",
+                                "quantity": 29,
+                                "materials": [
+                                    {
+                                        "name": "Mechanical component",
+                                        "quantity": 261
+                                    },
+                                    {
+                                        "name": "Gold ingot",
+                                        "quantity": 1305
+                                    }
+                                ],
+                                "subMaterials": {
+                                    "Mechanical component": [
+                                        {
+                                            "name": "Iron ingot",
+                                            "quantity": 522
+                                        },
+                                        {
+                                            "name": "Copper ingot",
+                                            "quantity": 261
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "Interior part (HQ)",
+                                "quantity": 26,
+                                "materials": [
+                                    {
+                                        "name": "Interior part",
+                                        "quantity": 234
+                                    },
+                                    {
+                                        "name": "Wooden planks",
+                                        "quantity": 1170
+                                    }
+                                ],
+                                "subMaterials": {
+                                    "Interior part": [
+                                        {
+                                            "name": "Fabric",
+                                            "quantity": 468
+                                        },
+                                        {
+                                            "name": "Polyester",
+                                            "quantity": 468
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "Engine part (HQ)",
+                                "quantity": 18,
+                                "materials": [
+                                    {
+                                        "name": "Engine Part",
+                                        "quantity": 162
+                                    },
+                                    {
+                                        "name": "Copper ingot",
+                                        "quantity": 810
+                                    },
+                                    {
+                                        "name": "Canister (petrol)",
+                                        "quantity": 18
+                                    }
+                                ],
+                                "subMaterials": {
+                                    "Engine Part": [
+                                        {
+                                            "name": "Iron ingot",
+                                            "quantity": 162
+                                        },
+                                        {
+                                            "name": "Copper ingot",
+                                            "quantity": 162
+                                        },
+                                        {
+                                            "name": "Canister (petrol)",
+                                            "quantity": 162
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "totalMaterials": [
+                            {
+                                "name": "Iron ingot",
+                                "quantity": 522
+                            },
+                            {
+                                "name": "Copper ingot",
+                                "quantity": 1098
+                            },
+                            {
+                                "name": "Gold ingot",
+                                "quantity": 1305
+                            },
+                            {
+                                "name": "Wooden planks",
+                                "quantity": 1170
+                            },
+                            {
+                                "name": "Fabric",
+                                "quantity": 468
+                            },
+                            {
+                                "name": "Polyester",
+                                "quantity": 468
+                            },
+                            {
+                                "name": "Canister (petrol)",
+                                "quantity": 180
+                            }
+                        ],
+                        "imageUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png"
+                    }
+                ]
+            }
+        }
+    },
+    "clothing": {
+        "name": "Clothing",
+        "subcategories": {
+            "vests": {
+                "name": "Vests",
+                "items": []
+            },
+            "helmets": {
+                "name": "Helmets",
+                "items": []
+            }
+        }
     }
-  },
-  "vehicles": {
-    "name": "Vehicles",
-    "subcategories": {
-      "cars": {
-        "name": "Cars",
-        "items": []
-      },
-      "trucks": {
-        "name": "Trucks",
-        "items": [
-          {
-            "id": "ural-device",
-            "title": "Ural Device",
-            "quantity": 1,
-            "items": [
-              {
-                "name": "Mechanical component (HQ)",
-                "quantity": 29,
-                "materials": [
-                  { "name": "Mechanical component", "quantity": 261 },
-                  { "name": "Gold ingot", "quantity": 1305 }
-                ],
-                "subMaterials": {
-                  "Mechanical component": [
-                    { "name": "Iron ingot", "quantity": 522 },
-                    { "name": "Copper ingot", "quantity": 261 }
-                  ]
-                }
-              },
-              {
-                "name": "Interior part (HQ)",
-                "quantity": 26,
-                "materials": [
-                  { "name": "Interior part", "quantity": 234 },
-                  { "name": "Wooden planks", "quantity": 1170 }
-                ],
-                "subMaterials": {
-                  "Interior part": [
-                    { "name": "Fabric", "quantity": 468 },
-                    { "name": "Polyester", "quantity": 468 }
-                  ]
-                }
-              },
-              {
-                "name": "Engine part (HQ)",
-                "quantity": 18,
-                "materials": [
-                  { "name": "Engine Part", "quantity": 162 },
-                  { "name": "Copper ingot", "quantity": 810 },
-                  { "name": "Canister (petrol)", "quantity": 18 }
-                ],
-                "subMaterials": {
-                  "Engine Part": [
-                    { "name": "Iron ingot", "quantity": 162 },
-                    { "name": "Copper ingot", "quantity": 162 },
-                    { "name": "Canister (petrol)", "quantity": 162 }
-                  ]
-                }
-              }
-            ],
-            "totalMaterials": [
-              { "name": "Iron ingot", "quantity": 522 },
-              { "name": "Copper ingot", "quantity": 1098 },
-              { "name": "Gold ingot", "quantity": 1305 },
-              { "name": "Wooden planks", "quantity": 1170 },
-              { "name": "Fabric", "quantity": 468 },
-              { "name": "Polyester", "quantity": 468 },
-              { "name": "Canister (petrol)", "quantity": 180 }
-            ],
-            "imageUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png"
-          }
-        ]
-      }
-    }
-  },
-  "clothing": {
-    "name": "Clothing",
-    "subcategories": {
-      "vests": {
-        "name": "Vests",
-        "items": []
-      },
-      "helmets": {
-        "name": "Helmets",
-        "items": []
-      }
-    }
-  }
 }
