@@ -116,58 +116,55 @@
                 "name": "Mechanical component (HQ)",
                 "quantity": 29,
                 "materials": [
-                  { 
-                    "name": "Mechanical component", 
-                    "quantity": 9,
-                    "subMaterials": [
-                      { "name": "Iron ingot", "quantity": 2 },
-                      { "name": "Copper ingot", "quantity": 1 }
-                    ]
-                  },
+                  { "name": "Mechanical component", "quantity": 9 },
                   { "name": "Gold ingot", "quantity": 45 }
-                ]
+                ],
+                "subMaterials": {
+                  "Mechanical component": [
+                    { "name": "Iron ingot", "quantity": 2 },
+                    { "name": "Copper ingot", "quantity": 1 }
+                  ]
+                }
               },
               {
                 "name": "Interior part (HQ)",
                 "quantity": 26,
                 "materials": [
-                  { 
-                    "name": "Interior part", 
-                    "quantity": 9,
-                    "subMaterials": [
-                      { "name": "Fabric", "quantity": 2 },
-                      { "name": "Polyester", "quantity": 2 }
-                    ]
-                  },
+                  { "name": "Interior part", "quantity": 9 },
                   { "name": "Wooden planks", "quantity": 45 }
-                ]
+                ],
+                "subMaterials": {
+                  "Interior part": [
+                    { "name": "Fabric", "quantity": 2 },
+                    { "name": "Polyester", "quantity": 2 }
+                  ]
+                }
               },
               {
                 "name": "Engine part (HQ)",
                 "quantity": 18,
                 "materials": [
-                  { 
-                    "name": "Engine Part", 
-                    "quantity": 9,
-                    "subMaterials": [
-                      { "name": "Iron ingot", "quantity": 1 },
-                      { "name": "Copper ingot", "quantity": 1 },
-                      { "name": "Canister (petrol)", "quantity": 1 }
-                    ]
-                  },
+                  { "name": "Engine Part", "quantity": 9 },
                   { "name": "Copper ingot", "quantity": 45 },
                   { "name": "Canister (petrol)", "quantity": 1 }
-                ]
+                ],
+                "subMaterials": {
+                  "Engine Part": [
+                    { "name": "Iron ingot", "quantity": 1 },
+                    { "name": "Copper ingot", "quantity": 1 },
+                    { "name": "Canister (petrol)", "quantity": 1 }
+                  ]
+                }
               }
             ],
             "totalMaterials": [
               { "name": "Iron ingot", "quantity": 522 },
-              { "name": "Copper ingot", "quantity": 306 },
-              { "name": "Gold ingot", "quantity": 45 },
+              { "name": "Copper ingot", "quantity": 1098 },
+              { "name": "Gold ingot", "quantity": 1305 },
+              { "name": "Wooden planks", "quantity": 1170 },
               { "name": "Fabric", "quantity": 468 },
               { "name": "Polyester", "quantity": 468 },
-              { "name": "Wooden planks", "quantity": 45 },
-              { "name": "Canister (petrol)", "quantity": 163 }
+              { "name": "Canister (petrol)", "quantity": 180 }
             ],
             "imageUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png"
           }
