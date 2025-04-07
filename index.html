@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ELAN Server - Arma Reforger Crafting System</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg-dark: #18181b;
+      --bg-darker: #121214;
+      --bg-medium: #27272a;
+      --bg-light: #3f3f46;
+      --border-color: #52525b;
+      --text-light: #f4f4f5;
+      --text-medium: #d4d4d8;
+      --text-dim: #a1a1aa;
+      --iron-color: #4682B4;
+      --copper-color: #E9967A;
+      --gold-color: #DAA520;
+      --silver-color: #C0C0C0;
+      --charcoal-color: #FF7F50;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: var(--bg-medium);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem;
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      .header-content {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .search-container {
+      position: relative;
+      width: 100%;
+    }
+
+    @media (min-width: 768px) {
+      .search-container {
+        width: 250px;
+      }
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1rem;
+      height: 1rem;
+      color: var(--text-dim);
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 0.5rem 0.5rem 0.5rem 2rem;
+      background-color: var(--bg-light);
+      border: 1px solid var(--border-color);
+      border-radius: 0.25rem;
+      color: var(--text-light);
+    }
+
+    input[type="text"]::placeholder {
+      color: var(--text-dim);
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--text-dim);
+    }
+
+    .main-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    aside {
+      width: 250px;
+      background-color: var(--bg-medium);
+      border-right: 1px solid var(--border-color);
+      overflow-y: auto;
+      display: none;
+    }
+
+    @media (min-width: 768px) {
+      aside {
+        display: block;
+      }
+    }
+
+    .sidebar-content {
+      padding: 1rem;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .category-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .category-button, .subcategory-button, .item-button {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      text-align: left;
+      padding: 0.5rem;
+      border: none;
+      background: none;
+      color: var(--text-light);
+      cursor: pointer;
+      border-radius: 0.25rem;
+    }
+
+    .category-button:hover, .subcategory-button:hover {
+      background-color: var(--bg-light);
+    }
+
+    .subcategory-list {
+      margin-left: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      margin-top: 0.25rem;
+    }
+
+    .subcategory-button {
+      font-size: 0.875rem;
+    }
+
+    .item-list {
+      margin-left: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      margin-top: 0.25rem;
+    }
+
+    .item-button {
+      font-size: 0.875rem;
+    }
+
+    .item-button.active {
+      background-color: var(--bg-light);
+    }
+
+    .item-button:hover {
+      background-color: var(--bg-light);
+    }
+
+    main {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+    }
+
+    .search-results {
+      margin-bottom: 1.5rem;
+    }
+
+    .search-results-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .search-results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .search-result-item {
+      padding: 1rem;
+      background-color: var(--bg-medium);
+      border: 1px solid var(--border-color);
+      border-radius: 0.25rem;
+      cursor: pointer;
+    }
+
+    .search-result-item:hover {
+      background-color: var(--bg-light);
+    }
+
+    .search-result-title {
+      font-weight: bold;
+      margin-bottom: 0.25rem;
+    }
+
+    .search-result-path {
+      font-size: 0.875rem;
+      color: var(--text-dim);
+    }
+
+    .item-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .item-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+
+    .item-path {
+      font-size: 0.875rem;
+      color: var(--text-dim);
+      margin-left: 0.5rem;
+    }
+
+    .crafting-table {
+      background-color: var(--bg-medium);
+      border: 1px solid var(--border-color);
+      border-radius: 0.25rem;
+      overflow: hidden;
+    }
+
+    .crafting-table-header {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .crafting-table-title {
+      font-weight: bold;
+    }
+
+    .crafting-table-quantity {
+      font-size: 0.875rem;
+      color: var(--text-dim);
+    }
+
+    .crafting-table-content {
+      padding: 1rem;
+    }
+
+    .crafting-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 1024px) {
+      .crafting-grid {
+        grid-template-columns: 2fr 1fr;
+      }
+    }
+
+    .section-title {
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      background-color: var(--bg-light);
+      text-align: left;
+      padding: 0.5rem;
+    }
+
+    td {
+      padding: 0.5rem;
+      background-color: var(--bg-light);
+      border-top: 1px solid var(--border-color);
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .preview-container {
+      background-color: var(--bg-darker);
+      padding: 1rem;
+      border-radius: 0.25rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .preview-image {
+      max-width: 100%;
+      max-height: 150px;
+      object-fit: contain;
+    }
+
+    .chart-container {
+      background-color: var(--bg-darker);
+      padding: 1rem;
+      border-radius: 0.25rem;
+      height: 250px;
+    }
+
+    .iron-color { color: var(--iron-color); }
+    .copper-color { color: var(--copper-color); }
+    .gold-color { color: var(--gold-color); }
+    .silver-color { color: var(--silver-color); }
+    .charcoal-color { color: var(--charcoal-color); }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .chevron-icon {
+      width: 16px;
+      height: 16px;
+      margin-right: 0.25rem;
+    }
+
+    .subcategory-button .chevron-icon {
+      width: 14px;
+      height: 14px;
+    }
+
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      font-size: 1.25rem;
+      color: var(--text-dim);
+    }
+
+    .loading-spinner {
+      border: 4px solid var(--bg-light);
+      border-top: 4px solid var(--text-light);
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 1s linear infinite;
+      margin-right: 0.5rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .welcome-message {
+      text-align: center;
+      padding: 2rem;
+      background-color: var(--bg-medium);
+      border-radius: 0.5rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .welcome-message h2 {
+      margin-bottom: 1rem;
+    }
+
+    .welcome-message p {
+      margin-bottom: 0.5rem;
+      color: var(--text-medium);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <h1>ELAN Server - Arma Reforger Crafting System</h1>
+      <div class="search-container">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="search-input" placeholder="Search for items...">
+      </div>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <!-- Sidebar -->
+    <aside>
+      <div class="sidebar-content">
+        <h2>Categories</h2>
+        <div class="category-list" id="category-list">
+          <div class="loading">
+            <div class="loading-spinner"></div>
+            Loading...
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+      <div id="loading-indicator" class="loading">
+        <div class="loading-spinner"></div>
+        Loading crafting data...
+      </div>
+
+      <div id="search-results" class="search-results hidden">
+        <h2 class="search-results-title">Search results for "<span id="search-query"></span>"</h2>
+        <div id="search-results-grid" class="search-results-grid">
+          <!-- Search results will be populated by JavaScript -->
+        </div>
+      </div>
+
+      <div id="welcome-screen" class="hidden">
+        <div class="welcome-message">
+          <h2>Welcome to Arma Reforger Crafting System</h2>
+          <p>Select an item from the sidebar to view crafting details.</p>
+          <p>You can also search for items using the search bar above.</p>
+        </div>
+      </div>
+
+      <div id="item-display" class="hidden">
+        <div class="item-header">
+          <h2 class="item-title" id="current-item-title"></h2>
+          <span class="item-path" id="current-item-path"></span>
+        </div>
+        <div class="crafting-table">
+          <div class="crafting-table-header">
+            <span class="crafting-table-title" id="crafting-title"></span>
+            <span class="crafting-table-quantity">Quantity: <span id="crafting-quantity"></span></span>
+          </div>
+          <div class="crafting-table-content">
+            <div class="crafting-grid">
+              <div>
+                <h3 class="section-title">Required Components</h3>
+                <div class="table-container">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Item</th>
+                        <th class="text-center">Quantity</th>
+                        <th>Material</th>
+                        <th class="text-center">Quantity</th>
+                      </tr>
+                    </thead>
+                    <tbody id="components-table">
+                      <!-- Components will be populated by JavaScript -->
+                    </tbody>
+                  </table>
+                </div>
+                
+                <h3 class="section-title" style="margin-top: 1.5rem;">Total Materials</h3>
+                <div class="table-container">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Material</th>
+                        <th class="text-center">Quantity</th>
+                      </tr>
+                    </thead>
+                    <tbody id="materials-table">
+                      <!-- Materials will be populated by JavaScript -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              
+              <div>
+                <h3 class="section-title">Preview</h3>
+                <div class="preview-container">
+                  <img id="item-image" src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png" alt="Item preview" class="preview-image">
+                </div>
+                
+                <h3 class="section-title" style="margin-top: 1.5rem;">Material Distribution</h3>
+                <div class="chart-container">
+                  <canvas id="materials-chart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Material colors
+    const COLORS = {
+      "Iron ingot": "#4682B4",
+      "Copper ingot": "#E9967A",
+      "Gold ingot": "#DAA520",
+      "Silver ingot": "#C0C0C0",
+      "Charcoal": "#FF7F50"
+    };
+
+    // State
+    let craftingData = {};
+    let expandedCategories = {};
+    let expandedSubcategories = {};
+    let selectedItem = null;
+    let searchQuery = "";
+    let materialsChart = null;
+    let dataLoaded = false;
+
+    // DOM elements
+    const loadingIndicatorEl = document.getElementById('loading-indicator');
+    const categoryListEl = document.getElementById('category-list');
+    const searchInputEl = document.getElementById('search-input');
+    const searchResultsEl = document.getElementById('search-results');
+    const searchQueryEl = document.getElementById('search-query');
+    const searchResultsGridEl = document.getElementById('search-results-grid');
+    const welcomeScreenEl = document.getElementById('welcome-screen');
+    const itemDisplayEl = document.getElementById('item-display');
+    const currentItemTitleEl = document.getElementById('current-item-title');
+    const currentItemPathEl = document.getElementById('current-item-path');
+    const craftingTitleEl = document.getElementById('crafting-title');
+    const craftingQuantityEl = document.getElementById('crafting-quantity');
+    const componentsTableEl = document.getElementById('components-table');
+    const materialsTableEl = document.getElementById('materials-table');
+    const itemImageEl = document.getElementById('item-image');
+    const materialsChartEl = document.getElementById('materials-chart');
+
+    // Load crafting data from JSON file
+    async function loadCraftingData() {
+      try {
+        const response = await fetch('crafting-data.json');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        craftingData = await response.json();
+        
+        // Initialize expanded categories
+        Object.keys(craftingData).forEach(category => {
+          expandedCategories[category] = true;
+          
+          Object.keys(craftingData[category].subcategories).forEach(subcategory => {
+            expandedSubcategories[`${category}-${subcategory}`] = true;
+          });
+        });
+        
+        dataLoaded = true;
+        loadingIndicatorEl.classList.add('hidden');
+        welcomeScreenEl.classList.remove('hidden');
+        
+        // Initialize UI
+        updateUI();
+      } catch (error) {
+        console.error('Error loading crafting data:', error);
+        loadingIndicatorEl.innerHTML = `
+          <div>
+            <p>Error loading crafting data. Please check if the JSON file exists and is valid.</p>
+            <p style="color: red; margin-top: 0.5rem;">${error.message}</p>
+            <p style="margin-top: 1rem;">Note: To load external JSON files, you need to run this page on a web server.</p>
+            <p>You can use a simple local server like:</p>
+            <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+              <li>Python: <code>python -m http.server</code></li>
+              <li>Node.js: <code>npx serve</code></li>
+              <li>VS Code Live Server extension</li>
+            </ul>
+          </div>
+        `;
+      }
+    }
+
+    // Get all items for search
+    function getAllItems() {
+      const allItems = [];
+      
+      Object.entries(craftingData).forEach(([categoryKey, category]) => {
+        Object.entries(category.subcategories).forEach(([subcategoryKey, subcategory]) => {
+          subcategory.items.forEach(item => {
+            allItems.push({
+              ...item,
+              categoryKey,
+              subcategoryKey,
+              category: category.name,
+              subcategory: subcategory.name,
+            });
+          });
+        });
+      });
+      
+      return allItems;
+    }
+
+    // Initialize the sidebar
+    function initializeSidebar() {
+      categoryListEl.innerHTML = '';
+      
+      Object.entries(craftingData).forEach(([categoryKey, category]) => {
+        const categoryEl = document.createElement('div');
+        categoryEl.innerHTML = `
+          <button class="category-button" data-category="${categoryKey}">
+            <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              ${expandedCategories[categoryKey] ? 
+                '<polyline points="6 9 12 15 18 9"></polyline>' : 
+                '<polyline points="9 18 15 12 9 6"></polyline>'}
+            </svg>
+            ${category.name}
+          </button>
+        `;
+        
+        if (expandedCategories[categoryKey]) {
+          const subcategoriesEl = document.createElement('div');
+          subcategoriesEl.className = 'subcategory-list';
+          
+          Object.entries(category.subcategories).forEach(([subcategoryKey, subcategory]) => {
+            const subcategoryEl = document.createElement('div');
+            const subcategoryId = `${categoryKey}-${subcategoryKey}`;
+            
+            subcategoryEl.innerHTML = `
+              <button class="subcategory-button" data-category="${categoryKey}" data-subcategory="${subcategoryKey}">
+                <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  ${expandedSubcategories[subcategoryId] ? 
+                    '<polyline points="6 9 12 15 18 9"></polyline>' : 
+                    '<polyline points="9 18 15 12 9 6"></polyline>'}
+                </svg>
+                ${subcategory.name}
+              </button>
+            `;
+            
+            if (expandedSubcategories[subcategoryId]) {
+              const itemsEl = document.createElement('div');
+              itemsEl.className = 'item-list';
+              
+              subcategory.items.forEach(item => {
+                const itemEl = document.createElement('button');
+                itemEl.className = `item-button ${selectedItem === item.id ? 'active' : ''}`;
+                itemEl.setAttribute('data-item-id', item.id);
+                itemEl.textContent = item.title;
+                
+                itemEl.addEventListener('click', () => {
+                  selectItem(item.id);
+                });
+                
+                itemsEl.appendChild(itemEl);
+              });
+              
+              subcategoryEl.appendChild(itemsEl);
+            }
+            
+            subcategoriesEl.appendChild(subcategoryEl);
+          });
+          
+          categoryEl.appendChild(subcategoriesEl);
+        }
+        
+        categoryListEl.appendChild(categoryEl);
+      });
+      
+      // Add event listeners to category buttons
+      document.querySelectorAll('.category-button').forEach(button => {
+        button.addEventListener('click', () => {
+          const category = button.getAttribute('data-category');
+          toggleCategory(category);
+        });
+      });
+      
+      // Add event listeners to subcategory buttons
+      document.querySelectorAll('.subcategory-button').forEach(button => {
+        button.addEventListener('click', () => {
+          const category = button.getAttribute('data-category');
+          const subcategory = button.getAttribute('data-subcategory');
+          toggleSubcategory(category, subcategory);
+        });
+      });
+    }
+
+    // Toggle category expansion
+    function toggleCategory(category) {
+      expandedCategories[category] = !expandedCategories[category];
+      initializeSidebar();
+    }
+
+    // Toggle subcategory expansion
+    function toggleSubcategory(category, subcategory) {
+      const key = `${category}-${subcategory}`;
+      expandedSubcategories[key] = !expandedSubcategories[key];
+      initializeSidebar();
+    }
+
+    // Select an item
+    function selectItem(itemId) {
+      selectedItem = itemId;
+      searchQuery = '';
+      searchInputEl.value = '';
+      updateUI();
+    }
+
+    // Handle search
+    function handleSearch() {
+      searchQuery = searchInputEl.value.trim();
+      updateUI();
+    }
+
+    // Update the UI based on current state
+    function updateUI() {
+      if (!dataLoaded) return;
+      
+      // Update sidebar
+      initializeSidebar();
+      
+      // Handle search results
+      if (searchQuery) {
+        const allItems = getAllItems();
+        const filteredItems = allItems.filter(item => 
+          item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.subcategory.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        
+        searchQueryEl.textContent = searchQuery;
+        searchResultsGridEl.innerHTML = '';
+        
+        if (filteredItems.length > 0) {
+          filteredItems.forEach(item => {
+            const itemEl = document.createElement('div');
+            itemEl.className = 'search-result-item';
+            itemEl.innerHTML = `
+              <div class="search-result-title">${item.title}</div>
+              <div class="search-result-path">${item.category} > ${item.subcategory}</div>
+            `;
+            
+            itemEl.addEventListener('click', () => {
+              selectItem(item.id);
+            });
+            
+            searchResultsGridEl.appendChild(itemEl);
+          });
+        } else {
+          searchResultsGridEl.innerHTML = '<p>No results found.</p>';
+        }
+        
+        searchResultsEl.classList.remove('hidden');
+        welcomeScreenEl.classList.add('hidden');
+        itemDisplayEl.classList.add('hidden');
+      } else {
+        searchResultsEl.classList.add('hidden');
+        
+        // Show item display if an item is selected, otherwise show welcome screen
+        if (selectedItem) {
+          welcomeScreenEl.classList.add('hidden');
+          itemDisplayEl.classList.remove('hidden');
+          
+          // Find the current item
+          const allItems = getAllItems();
+          const currentItem = allItems.find(item => item.id === selectedItem);
+          
+          if (currentItem) {
+            // Update item display
+            currentItemTitleEl.textContent = currentItem.title;
+            currentItemPathEl.textContent = `${currentItem.category} > ${currentItem.subcategory}`;
+            craftingTitleEl.textContent = currentItem.title;
+            craftingQuantityEl.textContent = currentItem.quantity;
+            itemImageEl.src = currentItem.imageUrl;
+            itemImageEl.alt = currentItem.title;
+            
+            // Update components table
+            componentsTableEl.innerHTML = '';
+            currentItem.items.forEach(item => {
+              item.materials.forEach((material, index) => {
+                const row = document.createElement('tr');
+                
+                if (index === 0) {
+                  row.innerHTML = `
+                    <td rowspan="${item.materials.length}">${item.name}</td>
+                    <td class="text-center" rowspan="${item.materials.length}">${item.quantity}</td>
+                    <td class="${getMaterialColorClass(material.name)}">${material.name}</td>
+                    <td class="text-center">${material.quantity}</td>
+                  `;
+                } else {
+                  row.innerHTML = `
+                    <td class="${getMaterialColorClass(material.name)}">${material.name}</td>
+                    <td class="text-center">${material.quantity}</td>
+                  `;
+                }
+                
+                componentsTableEl.appendChild(row);
+              });
+            });
+            
+            // Update materials table
+            materialsTableEl.innerHTML = '';
+            currentItem.totalMaterials.forEach(material => {
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                <td class="${getMaterialColorClass(material.name)}">${material.name}</td>
+                <td class="text-center">${material.quantity}</td>
+              `;
+              materialsTableEl.appendChild(row);
+            });
+            
+            // Update chart
+            updateMaterialsChart(currentItem.totalMaterials);
+          }
+        } else {
+          welcomeScreenEl.classList.remove('hidden');
+          itemDisplayEl.classList.add('hidden');
+        }
+      }
+    }
+
+    // Get material color class
+    function getMaterialColorClass(materialName) {
+      switch (materialName) {
+        case 'Iron ingot': return 'iron-color';
+        case 'Copper ingot': return 'copper-color';
+        case 'Gold ingot': return 'gold-color';
+        case 'Silver ingot': return 'silver-color';
+        case 'Charcoal': return 'charcoal-color';
+        default: return '';
+      }
+    }
+
+    // Update materials chart
+    function updateMaterialsChart(materials) {
+      const chartData = {
+        labels: materials.map(m => m.name),
+        datasets: [{
+          data: materials.map(m => m.quantity),
+          backgroundColor: materials.map(m => COLORS[m.name] || '#777'),
+        }]
+      };
+      
+      if (materialsChart) {
+        materialsChart.data = chartData;
+        materialsChart.update();
+      } else {
+        materialsChart = new Chart(materialsChartEl, {
+          type: 'pie',
+          data: chartData,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  color: '#f4f4f5'
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const label = context.label || '';
+                    const value = context.raw || 0;
+                    return `${label}: ${value}`;
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    // Event listeners
+    searchInputEl.addEventListener('input', handleSearch);
+
+    // Load data and initialize the UI
+    loadCraftingData();
+  </script>
+</body>
+</html>

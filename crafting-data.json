@@ -1,0 +1,126 @@
+{
+  "weapons": {
+    "name": "Weapons",
+    "subcategories": {
+      "assault": {
+        "name": "Assault Rifles",
+        "items": [
+          {
+            "id": "sig-mcx",
+            "title": "SIG MCX",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Weapon part",
+                "quantity": 55,
+                "materials": [
+                  { "name": "Iron ingot", "quantity": 55 },
+                  { "name": "Copper ingot", "quantity": 55 }
+                ]
+              },
+              {
+                "name": "Stabilizer",
+                "quantity": 30,
+                "materials": [
+                  { "name": "Iron ingot", "quantity": 60 },
+                  { "name": "Gold ingot", "quantity": 30 }
+                ]
+              },
+              {
+                "name": "Attachment Part",
+                "quantity": 34,
+                "materials": [
+                  { "name": "Copper ingot", "quantity": 68 },
+                  { "name": "Silver ingot", "quantity": 34 }
+                ]
+              }
+            ],
+            "totalMaterials": [
+              { "name": "Iron ingot", "quantity": 115 },
+              { "name": "Copper ingot", "quantity": 123 },
+              { "name": "Gold ingot", "quantity": 30 },
+              { "name": "Silver ingot", "quantity": 34 }
+            ],
+            "imageUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png"
+          }
+        ]
+      }
+    }
+  },
+  "ammunition": {
+    "name": "Ammunition",
+    "subcategories": {
+      "magazines": {
+        "name": "Magazines",
+        "items": [
+          {
+            "id": "9x19-mag",
+            "title": "30rnd 9x19 Mag",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Ammo",
+                "quantity": 1,
+                "materials": [
+                  { "name": "Iron ingot", "quantity": 1 },
+                  { "name": "Charcoal", "quantity": 1 }
+                ]
+              }
+            ],
+            "totalMaterials": [
+              { "name": "Iron ingot", "quantity": 1 },
+              { "name": "Charcoal", "quantity": 1 }
+            ],
+            "imageUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png"
+          },
+          {
+            "id": "300-mag",
+            "title": ".300 Blackout Magazine",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Ammo",
+                "quantity": 2,
+                "materials": [
+                  { "name": "Iron ingot", "quantity": 2 },
+                  { "name": "Charcoal", "quantity": 2 }
+                ]
+              }
+            ],
+            "totalMaterials": [
+              { "name": "Iron ingot", "quantity": 2 },
+              { "name": "Charcoal", "quantity": 2 }
+            ],
+            "imageUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png"
+          }
+        ]
+      }
+    }
+  },
+  "vehicles": {
+    "name": "Vehicles",
+    "subcategories": {
+      "cars": {
+        "name": "Cars",
+        "items": []
+      },
+      "trucks": {
+        "name": "Trucks",
+        "items": []
+      }
+    }
+  },
+  "clothing": {
+    "name": "Clothing",
+    "subcategories": {
+      "vests": {
+        "name": "Vests",
+        "items": []
+      },
+      "helmets": {
+        "name": "Helmets",
+        "items": []
+      }
+    }
+  }
+}
