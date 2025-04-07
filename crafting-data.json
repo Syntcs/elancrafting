@@ -27,7 +27,7 @@
                 ]
               },
               {
-                "name": "Attachment Partxx",
+                "name": "Attachment Part",
                 "quantity": 34,
                 "materials": [
                   { "name": "Copper ingot", "quantity": 68 },
@@ -116,13 +116,13 @@
                 "name": "Mechanical component (HQ)",
                 "quantity": 29,
                 "materials": [
-                  { "name": "Mechanical component", "quantity": 9 },
-                  { "name": "Gold ingot", "quantity": 45 }
+                  { "name": "Mechanical component", "quantity": 261 },
+                  { "name": "Gold ingot", "quantity": 1305 }
                 ],
                 "subMaterials": {
                   "Mechanical component": [
-                    { "name": "Iron ingot", "quantity": 2 },
-                    { "name": "Copper ingot", "quantity": 1 }
+                    { "name": "Iron ingot", "quantity": 522 },
+                    { "name": "Copper ingot", "quantity": 261 }
                   ]
                 }
               },
@@ -130,13 +130,13 @@
                 "name": "Interior part (HQ)",
                 "quantity": 26,
                 "materials": [
-                  { "name": "Interior part", "quantity": 9 },
-                  { "name": "Wooden planks", "quantity": 45 }
+                  { "name": "Interior part", "quantity": 234 },
+                  { "name": "Wooden planks", "quantity": 1170 }
                 ],
                 "subMaterials": {
                   "Interior part": [
-                    { "name": "Fabric", "quantity": 2 },
-                    { "name": "Polyester", "quantity": 2 }
+                    { "name": "Fabric", "quantity": 468 },
+                    { "name": "Polyester", "quantity": 468 }
                   ]
                 }
               },
@@ -144,15 +144,15 @@
                 "name": "Engine part (HQ)",
                 "quantity": 18,
                 "materials": [
-                  { "name": "Engine Part", "quantity": 9 },
-                  { "name": "Copper ingot", "quantity": 45 },
-                  { "name": "Canister (petrol)", "quantity": 1 }
+                  { "name": "Engine Part", "quantity": 162 },
+                  { "name": "Copper ingot", "quantity": 810 },
+                  { "name": "Canister (petrol)", "quantity": 18 }
                 ],
                 "subMaterials": {
                   "Engine Part": [
-                    { "name": "Iron ingot", "quantity": 1 },
-                    { "name": "Copper ingot", "quantity": 1 },
-                    { "name": "Canister (petrol)", "quantity": 1 }
+                    { "name": "Iron ingot", "quantity": 162 },
+                    { "name": "Copper ingot", "quantity": 162 },
+                    { "name": "Canister (petrol)", "quantity": 162 }
                   ]
                 }
               }
