@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>v3 ELAN Server - Arma Reforger Crafting System</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <title>v4 ELAN Server - Arma Reforger Crafting System</title>
   <style>
     :root {
       --bg-dark: #18181b;
@@ -339,13 +338,6 @@
       object-fit: contain;
     }
 
-    .chart-container {
-      background-color: var(--bg-darker);
-      padding: 1rem;
-      border-radius: 0.25rem;
-      height: 250px;
-    }
-
     .iron-color { color: var(--iron-color); }
     .copper-color { color: var(--copper-color); }
     .gold-color { color: var(--gold-color); }
@@ -420,21 +412,83 @@
       border-right: none;
     }
 
-    .table-section {
-      background-color: var(--bg-darker);
-      padding: 0.5rem;
-      font-weight: bold;
-      text-align: center;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .empty-cell {
-      background-color: var(--bg-light) !important;
-    }
-
     .separator-row {
       height: 10px;
       background-color: var(--bg-medium);
+    }
+
+    /* Crafting Diagram Styles */
+    .crafting-diagram {
+      margin-top: 1.5rem;
+      background-color: var(--bg-medium);
+      border: 1px solid var(--border-color);
+      border-radius: 0.25rem;
+      padding: 1rem;
+    }
+
+    .diagram-container {
+      overflow-x: auto;
+      padding: 1rem;
+      background-color: var(--bg-darker);
+      border-radius: 0.25rem;
+    }
+
+    .diagram-node {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: var(--bg-light);
+      border: 1px solid var(--border-color);
+      border-radius: 0.25rem;
+      margin: 0.25rem;
+      font-size: 0.875rem;
+      position: relative;
+    }
+
+    .diagram-node.primary {
+      background-color: var(--bg-medium);
+      font-weight: bold;
+    }
+
+    .diagram-node .quantity {
+      display: inline-block;
+      background-color: var(--bg-darker);
+      padding: 0.1rem 0.3rem;
+      border-radius: 0.25rem;
+      margin-left: 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    .diagram-tree {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .diagram-level {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .diagram-level:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      bottom: -0.5rem;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background-color: var(--border-color);
+    }
+
+    .diagram-level-title {
+      width: 100%;
+      padding: 0.25rem 0.5rem;
+      background-color: var(--bg-medium);
+      border-radius: 0.25rem;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      font-size: 0.875rem;
     }
   </style>
 </head>
@@ -535,17 +589,21 @@
                     </tbody>
                   </table>
                 </div>
+
+                <div class="crafting-diagram">
+                  <h3 class="section-title">Crafting Diagram</h3>
+                  <div class="diagram-container">
+                    <div id="crafting-diagram" class="diagram-tree">
+                      <!-- Diagram will be populated by JavaScript -->
+                    </div>
+                  </div>
+                </div>
               </div>
               
               <div>
                 <h3 class="section-title">Preview</h3>
                 <div class="preview-container">
                   <img id="item-image" src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png" alt="Item preview" class="preview-image">
-                </div>
-                
-                <h3 class="section-title" style="margin-top: 1.5rem;">Material Distribution</h3>
-                <div class="chart-container">
-                  <canvas id="materials-chart"></canvas>
                 </div>
               </div>
             </div>
@@ -575,7 +633,6 @@
     let expandedSubcategories = {};
     let selectedItem = null;
     let searchQuery = "";
-    let materialsChart = null;
     let dataLoaded = false;
 
     // DOM elements
@@ -594,7 +651,7 @@
     const componentsTableEl = document.getElementById('components-table');
     const materialsTableEl = document.getElementById('materials-table');
     const itemImageEl = document.getElementById('item-image');
-    const materialsChartEl = document.getElementById('materials-chart');
+    const craftingDiagramEl = document.getElementById('crafting-diagram');
 
     // Load crafting data from JSON file
     async function loadCraftingData() {
@@ -1008,13 +1065,143 @@
               materialsTableEl.appendChild(row);
             });
             
-            // Update chart
-            updateMaterialsChart(currentItem.totalMaterials);
+            // Update crafting diagram
+            updateCraftingDiagram(currentItem);
           }
         } else {
           welcomeScreenEl.classList.remove('hidden');
           itemDisplayEl.classList.add('hidden');
         }
+      }
+    }
+
+    // Update crafting diagram
+    function updateCraftingDiagram(item) {
+      craftingDiagramEl.innerHTML = '';
+      
+      // Create the main item level
+      const mainLevelDiv = document.createElement('div');
+      mainLevelDiv.className = 'diagram-level';
+      
+      const mainLevelTitle = document.createElement('div');
+      mainLevelTitle.className = 'diagram-level-title';
+      mainLevelTitle.textContent = 'Final Product';
+      mainLevelDiv.appendChild(mainLevelTitle);
+      
+      const mainItemNode = document.createElement('div');
+      mainItemNode.className = 'diagram-node primary';
+      mainItemNode.innerHTML = `
+        ${item.title}
+        <span class="quantity">x${item.quantity}</span>
+      `;
+      mainLevelDiv.appendChild(mainItemNode);
+      
+      craftingDiagramEl.appendChild(mainLevelDiv);
+      
+      // Create the components level
+      if (item.items && item.items.length > 0) {
+        const componentsLevelDiv = document.createElement('div');
+        componentsLevelDiv.className = 'diagram-level';
+        
+        const componentsLevelTitle = document.createElement('div');
+        componentsLevelTitle.className = 'diagram-level-title';
+        componentsLevelTitle.textContent = 'Components';
+        componentsLevelDiv.appendChild(componentsLevelTitle);
+        
+        item.items.forEach(component => {
+          const componentNode = document.createElement('div');
+          componentNode.className = 'diagram-node';
+          componentNode.innerHTML = `
+            ${component.name}
+            <span class="quantity">x${component.quantity}</span>
+          `;
+          componentsLevelDiv.appendChild(componentNode);
+        });
+        
+        craftingDiagramEl.appendChild(componentsLevelDiv);
+      }
+      
+      // Create the materials level
+      const materialsLevelDiv = document.createElement('div');
+      materialsLevelDiv.className = 'diagram-level';
+      
+      const materialsLevelTitle = document.createElement('div');
+      materialsLevelTitle.className = 'diagram-level-title';
+      materialsLevelTitle.textContent = 'Materials';
+      materialsLevelDiv.appendChild(materialsLevelTitle);
+      
+      // Collect all unique materials
+      const allMaterials = new Map();
+      
+      item.items.forEach(component => {
+        component.materials.forEach(material => {
+          if (allMaterials.has(material.name)) {
+            allMaterials.set(material.name, allMaterials.get(material.name) + material.quantity);
+          } else {
+            allMaterials.set(material.name, material.quantity);
+          }
+        });
+      });
+      
+      // Add material nodes
+      allMaterials.forEach((quantity, name) => {
+        const materialNode = document.createElement('div');
+        materialNode.className = `diagram-node ${getMaterialColorClass(name)}`;
+        materialNode.innerHTML = `
+          ${name}
+          <span class="quantity">x${quantity}</span>
+        `;
+        materialsLevelDiv.appendChild(materialNode);
+      });
+      
+      craftingDiagramEl.appendChild(materialsLevelDiv);
+      
+      // Create the base materials level if any component has submaterials
+      let hasBaseMaterials = false;
+      item.items.forEach(component => {
+        if (component.subMaterials && Object.keys(component.subMaterials).length > 0) {
+          hasBaseMaterials = true;
+        }
+      });
+      
+      if (hasBaseMaterials) {
+        const baseMaterialsLevelDiv = document.createElement('div');
+        baseMaterialsLevelDiv.className = 'diagram-level';
+        
+        const baseMaterialsLevelTitle = document.createElement('div');
+        baseMaterialsLevelTitle.className = 'diagram-level-title';
+        baseMaterialsLevelTitle.textContent = 'Base Materials';
+        baseMaterialsLevelDiv.appendChild(baseMaterialsLevelTitle);
+        
+        // Collect all unique base materials
+        const allBaseMaterials = new Map();
+        
+        item.items.forEach(component => {
+          if (component.subMaterials) {
+            Object.entries(component.subMaterials).forEach(([materialName, subMaterials]) => {
+              subMaterials.forEach(subMaterial => {
+                if (allBaseMaterials.has(subMaterial.name)) {
+                  allBaseMaterials.set(subMaterial.name, allBaseMaterials.get(subMaterial.name) + subMaterial.quantity);
+                } else {
+                  allBaseMaterials.set(subMaterial.name, subMaterial.quantity);
+                }
+              });
+            });
+          }
+        });
+        
+        // Add base material nodes
+        allBaseMaterials.forEach((quantity, name) => {
+          const baseMaterialNode = document.createElement('div');
+          baseMaterialNode.className = `diagram-node ${getMaterialColorClass(name)}`;
+          baseMaterialNode.innerHTML = `
+            ${name}
+            <span class="quantity">x${quantity}</span>
+          `;
+          baseMaterialsLevelDiv.appendChild(baseMaterialNode);
+        });
+        
+        craftingDiagramEl.appendChild(baseMaterialsLevelDiv);
       }
     }
 
@@ -1031,48 +1218,6 @@
         case 'Wooden planks': return 'wooden-color';
         case 'Canister (petrol)': return 'petrol-color';
         default: return '';
-      }
-    }
-
-    // Update materials chart
-    function updateMaterialsChart(materials) {
-      const chartData = {
-        labels: materials.map(m => m.name),
-        datasets: [{
-          data: materials.map(m => m.quantity),
-          backgroundColor: materials.map(m => COLORS[m.name] || '#777'),
-        }]
-      };
-      
-      if (materialsChart) {
-        materialsChart.data = chartData;
-        materialsChart.update();
-      } else {
-        materialsChart = new Chart(materialsChartEl, {
-          type: 'pie',
-          data: chartData,
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                position: 'bottom',
-                labels: {
-                  color: '#f4f4f5'
-                }
-              },
-              tooltip: {
-                callbacks: {
-                  label: function(context) {
-                    const label = context.label || '';
-                    const value = context.raw || 0;
-                    return `${label}: ${value}`;
-                  }
-                }
-              }
-            }
-          }
-        });
       }
     }
 
