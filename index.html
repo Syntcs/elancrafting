@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>v4 ELAN Server - Arma Reforger Crafting System</title>
+  <title>v5 ELAN Server - Arma Reforger Crafting System</title>
   <style>
     :root {
       --bg-dark: #18181b;
@@ -417,7 +417,7 @@
       background-color: var(--bg-medium);
     }
 
-    /* Crafting Diagram Styles */
+    /* PERT Diagram Styles */
     .crafting-diagram {
       margin-top: 1.5rem;
       background-color: var(--bg-medium);
@@ -426,70 +426,72 @@
       padding: 1rem;
     }
 
-    .diagram-container {
-      overflow-x: auto;
+    .pert-container {
+      overflow: auto;
       padding: 1rem;
       background-color: var(--bg-darker);
       border-radius: 0.25rem;
+      min-height: 300px;
     }
 
-    .diagram-node {
-      display: inline-block;
-      padding: 0.5rem 1rem;
-      background-color: var(--bg-light);
+    .pert-diagram {
+      position: relative;
+      min-width: 100%;
+      min-height: 100%;
+    }
+
+    .pert-node {
+      position: absolute;
+      background-color: var(--bg-medium);
       border: 1px solid var(--border-color);
       border-radius: 0.25rem;
-      margin: 0.25rem;
-      font-size: 0.875rem;
-      position: relative;
+      padding: 0.5rem;
+      min-width: 120px;
+      text-align: center;
+      z-index: 2;
     }
 
-    .diagram-node.primary {
-      background-color: var(--bg-medium);
+    .pert-node.primary {
+      background-color: var(--bg-light);
       font-weight: bold;
+      border-width: 2px;
     }
 
-    .diagram-node .quantity {
-      display: inline-block;
-      background-color: var(--bg-darker);
-      padding: 0.1rem 0.3rem;
-      border-radius: 0.25rem;
-      margin-left: 0.5rem;
+    .pert-node .quantity {
+      display: block;
       font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 0.25rem;
     }
 
-    .diagram-tree {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .diagram-level {
-      display: flex;
-      flex-wrap: wrap;
-      margin-bottom: 1rem;
-      position: relative;
-    }
-
-    .diagram-level:not(:last-child)::after {
-      content: "";
+    .pert-arrow {
       position: absolute;
-      bottom: -0.5rem;
-      left: 0;
-      right: 0;
-      height: 1px;
+      height: 2px;
       background-color: var(--border-color);
+      z-index: 1;
     }
 
-    .diagram-level-title {
-      width: 100%;
-      padding: 0.25rem 0.5rem;
-      background-color: var(--bg-medium);
-      border-radius: 0.25rem;
-      margin-bottom: 0.5rem;
-      font-weight: bold;
-      font-size: 0.875rem;
+    .pert-arrow:before {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: -4px;
+      width: 0;
+      height: 0;
+      border-left: 8px solid var(--border-color);
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
     }
+
+    .iron-bg { background-color: rgba(70, 130, 180, 0.3); }
+    .copper-bg { background-color: rgba(233, 150, 122, 0.3); }
+    .gold-bg { background-color: rgba(218, 165, 32, 0.3); }
+    .silver-bg { background-color: rgba(192, 192, 192, 0.3); }
+    .charcoal-bg { background-color: rgba(255, 127, 80, 0.3); }
+    .fabric-bg { background-color: rgba(147, 112, 219, 0.3); }
+    .polyester-bg { background-color: rgba(32, 178, 170, 0.3); }
+    .wooden-bg { background-color: rgba(139, 69, 19, 0.3); }
+    .petrol-bg { background-color: rgba(50, 205, 50, 0.3); }
   </style>
 </head>
 <body>
@@ -591,10 +593,10 @@
                 </div>
 
                 <div class="crafting-diagram">
-                  <h3 class="section-title">Crafting Diagram</h3>
-                  <div class="diagram-container">
-                    <div id="crafting-diagram" class="diagram-tree">
-                      <!-- Diagram will be populated by JavaScript -->
+                  <h3 class="section-title">Crafting PERT Diagram</h3>
+                  <div class="pert-container">
+                    <div id="pert-diagram" class="pert-diagram">
+                      <!-- PERT diagram will be populated by JavaScript -->
                     </div>
                   </div>
                 </div>
@@ -651,7 +653,7 @@
     const componentsTableEl = document.getElementById('components-table');
     const materialsTableEl = document.getElementById('materials-table');
     const itemImageEl = document.getElementById('item-image');
-    const craftingDiagramEl = document.getElementById('crafting-diagram');
+    const craftingDiagramEl = document.getElementById('pert-diagram');
 
     // Load crafting data from JSON file
     async function loadCraftingData() {
@@ -664,10 +666,10 @@
         
         // Initialize expanded categories
         Object.keys(craftingData).forEach(category => {
-          expandedCategories[category] = true;
+          expandedCategories[category] = false;
           
           Object.keys(craftingData[category].subcategories).forEach(subcategory => {
-            expandedSubcategories[`${category}-${subcategory}`] = true;
+            expandedSubcategories[`${category}-${subcategory}`] = false;
           });
         });
         
@@ -1075,135 +1077,145 @@
       }
     }
 
-    // Update crafting diagram
-    function updateCraftingDiagram(item) {
-      craftingDiagramEl.innerHTML = '';
-      
-      // Create the main item level
-      const mainLevelDiv = document.createElement('div');
-      mainLevelDiv.className = 'diagram-level';
-      
-      const mainLevelTitle = document.createElement('div');
-      mainLevelTitle.className = 'diagram-level-title';
-      mainLevelTitle.textContent = 'Final Product';
-      mainLevelDiv.appendChild(mainLevelTitle);
-      
-      const mainItemNode = document.createElement('div');
-      mainItemNode.className = 'diagram-node primary';
-      mainItemNode.innerHTML = `
-        ${item.title}
-        <span class="quantity">x${item.quantity}</span>
+    // Update PERT diagram
+function updateCraftingDiagram(item) {
+  const pertDiagramEl = document.getElementById('pert-diagram');
+  pertDiagramEl.innerHTML = '';
+  
+  // Define node positions
+  const nodeSpacingX = 180;
+  const nodeSpacingY = 100;
+  const startX = 20;
+  const startY = 20;
+  
+  // Create the main product node
+  const mainNode = document.createElement('div');
+  mainNode.className = 'pert-node primary';
+  mainNode.style.left = `${startX}px`;
+  mainNode.style.top = `${startY}px`;
+  mainNode.innerHTML = `
+    ${item.title}
+    <span class="quantity">x${item.quantity}</span>
+  `;
+  pertDiagramEl.appendChild(mainNode);
+  
+  // Create component nodes
+  const componentNodes = [];
+  if (item.items && item.items.length > 0) {
+    item.items.forEach((component, index) => {
+      const componentNode = document.createElement('div');
+      componentNode.className = 'pert-node';
+      componentNode.style.left = `${startX + nodeSpacingX}px`;
+      componentNode.style.top = `${startY + index * nodeSpacingY}px`;
+      componentNode.innerHTML = `
+        ${component.name}
+        <span class="quantity">x${component.quantity}</span>
       `;
-      mainLevelDiv.appendChild(mainItemNode);
+      pertDiagramEl.appendChild(componentNode);
+      componentNodes.push(componentNode);
       
-      craftingDiagramEl.appendChild(mainLevelDiv);
+      // Create arrow from component to main product
+      createArrow(componentNode, mainNode, pertDiagramEl);
+    });
+  }
+  
+  // Create material nodes
+  if (item.items && item.items.length > 0) {
+    let materialIndex = 0;
+    
+    item.items.forEach((component, componentIndex) => {
+      const componentNode = componentNodes[componentIndex];
       
-      // Create the components level
-      if (item.items && item.items.length > 0) {
-        const componentsLevelDiv = document.createElement('div');
-        componentsLevelDiv.className = 'diagram-level';
-        
-        const componentsLevelTitle = document.createElement('div');
-        componentsLevelTitle.className = 'diagram-level-title';
-        componentsLevelTitle.textContent = 'Components';
-        componentsLevelDiv.appendChild(componentsLevelTitle);
-        
-        item.items.forEach(component => {
-          const componentNode = document.createElement('div');
-          componentNode.className = 'diagram-node';
-          componentNode.innerHTML = `
-            ${component.name}
-            <span class="quantity">x${component.quantity}</span>
-          `;
-          componentsLevelDiv.appendChild(componentNode);
-        });
-        
-        craftingDiagramEl.appendChild(componentsLevelDiv);
-      }
-      
-      // Create the materials level
-      const materialsLevelDiv = document.createElement('div');
-      materialsLevelDiv.className = 'diagram-level';
-      
-      const materialsLevelTitle = document.createElement('div');
-      materialsLevelTitle.className = 'diagram-level-title';
-      materialsLevelTitle.textContent = 'Materials';
-      materialsLevelDiv.appendChild(materialsLevelTitle);
-      
-      // Collect all unique materials
-      const allMaterials = new Map();
-      
-      item.items.forEach(component => {
-        component.materials.forEach(material => {
-          if (allMaterials.has(material.name)) {
-            allMaterials.set(material.name, allMaterials.get(material.name) + material.quantity);
-          } else {
-            allMaterials.set(material.name, material.quantity);
-          }
-        });
-      });
-      
-      // Add material nodes
-      allMaterials.forEach((quantity, name) => {
+      component.materials.forEach((material, index) => {
         const materialNode = document.createElement('div');
-        materialNode.className = `diagram-node ${getMaterialColorClass(name)}`;
+        materialNode.className = `pert-node ${getMaterialBgClass(material.name)}`;
+        materialNode.style.left = `${startX + nodeSpacingX * 2}px`;
+        materialNode.style.top = `${startY + materialIndex * (nodeSpacingY / 1.5)}px`;
         materialNode.innerHTML = `
-          ${name}
-          <span class="quantity">x${quantity}</span>
+          ${material.name}
+          <span class="quantity">x${material.quantity}</span>
         `;
-        materialsLevelDiv.appendChild(materialNode);
-      });
-      
-      craftingDiagramEl.appendChild(materialsLevelDiv);
-      
-      // Create the base materials level if any component has submaterials
-      let hasBaseMaterials = false;
-      item.items.forEach(component => {
-        if (component.subMaterials && Object.keys(component.subMaterials).length > 0) {
-          hasBaseMaterials = true;
+        pertDiagramEl.appendChild(materialNode);
+        
+        // Create arrow from material to component
+        createArrow(materialNode, componentNode, pertDiagramEl);
+        
+        // If this material has submaterials, create those nodes
+        if (component.subMaterials && component.subMaterials[material.name]) {
+          component.subMaterials[material.name].forEach((subMaterial, subIndex) => {
+            const subMaterialNode = document.createElement('div');
+            subMaterialNode.className = `pert-node ${getMaterialBgClass(subMaterial.name)}`;
+            subMaterialNode.style.left = `${startX + nodeSpacingX * 3}px`;
+            subMaterialNode.style.top = `${startY + materialIndex * (nodeSpacingY / 1.5) + subIndex * (nodeSpacingY / 2)}px`;
+            subMaterialNode.innerHTML = `
+              ${subMaterial.name}
+              <span class="quantity">x${subMaterial.quantity}</span>
+            `;
+            pertDiagramEl.appendChild(subMaterialNode);
+            
+            // Create arrow from submaterial to material
+            createArrow(subMaterialNode, materialNode, pertDiagramEl);
+          });
         }
+        
+        materialIndex++;
       });
-      
-      if (hasBaseMaterials) {
-        const baseMaterialsLevelDiv = document.createElement('div');
-        baseMaterialsLevelDiv.className = 'diagram-level';
-        
-        const baseMaterialsLevelTitle = document.createElement('div');
-        baseMaterialsLevelTitle.className = 'diagram-level-title';
-        baseMaterialsLevelTitle.textContent = 'Base Materials';
-        baseMaterialsLevelDiv.appendChild(baseMaterialsLevelTitle);
-        
-        // Collect all unique base materials
-        const allBaseMaterials = new Map();
-        
-        item.items.forEach(component => {
-          if (component.subMaterials) {
-            Object.entries(component.subMaterials).forEach(([materialName, subMaterials]) => {
-              subMaterials.forEach(subMaterial => {
-                if (allBaseMaterials.has(subMaterial.name)) {
-                  allBaseMaterials.set(subMaterial.name, allBaseMaterials.get(subMaterial.name) + subMaterial.quantity);
-                } else {
-                  allBaseMaterials.set(subMaterial.name, subMaterial.quantity);
-                }
-              });
-            });
-          }
-        });
-        
-        // Add base material nodes
-        allBaseMaterials.forEach((quantity, name) => {
-          const baseMaterialNode = document.createElement('div');
-          baseMaterialNode.className = `diagram-node ${getMaterialColorClass(name)}`;
-          baseMaterialNode.innerHTML = `
-            ${name}
-            <span class="quantity">x${quantity}</span>
-          `;
-          baseMaterialsLevelDiv.appendChild(baseMaterialNode);
-        });
-        
-        craftingDiagramEl.appendChild(baseMaterialsLevelDiv);
-      }
-    }
+    });
+  }
+  
+  // Set the diagram size based on the number of nodes
+  const diagramHeight = Math.max(item.items.length * nodeSpacingY, 300);
+  pertDiagramEl.style.height = `${diagramHeight}px`;
+  
+  // Set the container to scroll if needed
+  const pertContainer = document.querySelector('.pert-container');
+  pertContainer.style.maxHeight = `${Math.min(diagramHeight + 40, 500)}px`;
+}
+
+// Create an arrow between two nodes
+function createArrow(fromNode, toNode, container) {
+  // Get positions
+  const fromRect = fromNode.getBoundingClientRect();
+  const toRect = toNode.getBoundingClientRect();
+  const containerRect = container.getBoundingClientRect();
+  
+  // Calculate relative positions
+  const fromX = fromNode.offsetLeft + fromNode.offsetWidth;
+  const fromY = fromNode.offsetTop + fromNode.offsetHeight / 2;
+  const toX = toNode.offsetLeft;
+  const toY = toNode.offsetTop + toNode.offsetHeight / 2;
+  
+  // Calculate arrow dimensions
+  const length = toX - fromX;
+  const angle = Math.atan2(toY - fromY, toX - fromX) * 180 / Math.PI;
+  
+  // Create arrow element
+  const arrow = document.createElement('div');
+  arrow.className = 'pert-arrow';
+  arrow.style.width = `${length}px`;
+  arrow.style.left = `${fromX}px`;
+  arrow.style.top = `${fromY}px`;
+  arrow.style.transform = `rotate(${angle}deg)`;
+  arrow.style.transformOrigin = '0 0';
+  
+  container.appendChild(arrow);
+}
+
+// Get material background class
+function getMaterialBgClass(materialName) {
+  switch (materialName) {
+    case 'Iron ingot': return 'iron-bg';
+    case 'Copper ingot': return 'copper-bg';
+    case 'Gold ingot': return 'gold-bg';
+    case 'Silver ingot': return 'silver-bg';
+    case 'Charcoal': return 'charcoal-bg';
+    case 'Fabric': return 'fabric-bg';
+    case 'Polyester': return 'polyester-bg';
+    case 'Wooden planks': return 'wooden-bg';
+    case 'Canister (petrol)': return 'petrol-bg';
+    default: return '';
+  }
+}
 
     // Get material color class
     function getMaterialColorClass(materialName) {
