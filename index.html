@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>v5 ELAN Server - Arma Reforger Crafting System</title>
+  <title>v6 ELAN Server - Arma Reforger Crafting System</title>
   <style>
     :root {
       --bg-dark: #18181b;
@@ -417,7 +417,7 @@
       background-color: var(--bg-medium);
     }
 
-    /* PERT Diagram Styles */
+    /* Tree Diagram Styles */
     .crafting-diagram {
       margin-top: 1.5rem;
       background-color: var(--bg-medium);
@@ -426,7 +426,7 @@
       padding: 1rem;
     }
 
-    .pert-container {
+    .tree-container {
       overflow: auto;
       padding: 1rem;
       background-color: var(--bg-darker);
@@ -434,53 +434,41 @@
       min-height: 300px;
     }
 
-    .pert-diagram {
+    .tree-diagram {
       position: relative;
       min-width: 100%;
       min-height: 100%;
     }
 
-    .pert-node {
+    .tree-node {
       position: absolute;
       background-color: var(--bg-medium);
-      border: 1px solid var(--border-color);
-      border-radius: 0.25rem;
-      padding: 0.5rem;
+      border: 2px solid var(--border-color);
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
       min-width: 120px;
       text-align: center;
       z-index: 2;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 
-    .pert-node.primary {
+    .tree-node.primary {
       background-color: var(--bg-light);
       font-weight: bold;
       border-width: 2px;
     }
 
-    .pert-node .quantity {
+    .tree-node .quantity {
       display: block;
       font-size: 0.75rem;
       color: var(--text-dim);
       margin-top: 0.25rem;
     }
 
-    .pert-arrow {
+    .tree-line {
       position: absolute;
-      height: 2px;
       background-color: var(--border-color);
       z-index: 1;
-    }
-
-    .pert-arrow:before {
-      content: '';
-      position: absolute;
-      right: 0;
-      top: -4px;
-      width: 0;
-      height: 0;
-      border-left: 8px solid var(--border-color);
-      border-top: 5px solid transparent;
-      border-bottom: 5px solid transparent;
     }
 
     .iron-bg { background-color: rgba(70, 130, 180, 0.3); }
@@ -593,10 +581,10 @@
                 </div>
 
                 <div class="crafting-diagram">
-                  <h3 class="section-title">Crafting PERT Diagram</h3>
-                  <div class="pert-container">
-                    <div id="pert-diagram" class="pert-diagram">
-                      <!-- PERT diagram will be populated by JavaScript -->
+                  <h3 class="section-title">Crafting Diagram</h3>
+                  <div class="tree-container">
+                    <div id="tree-diagram" class="tree-diagram">
+                      <!-- Tree diagram will be populated by JavaScript -->
                     </div>
                   </div>
                 </div>
@@ -653,7 +641,7 @@
     const componentsTableEl = document.getElementById('components-table');
     const materialsTableEl = document.getElementById('materials-table');
     const itemImageEl = document.getElementById('item-image');
-    const craftingDiagramEl = document.getElementById('pert-diagram');
+    const treeDiagramEl = document.getElementById('tree-diagram');
 
     // Load crafting data from JSON file
     async function loadCraftingData() {
@@ -1067,8 +1055,8 @@
               materialsTableEl.appendChild(row);
             });
             
-            // Update crafting diagram
-            updateCraftingDiagram(currentItem);
+            // Update tree diagram
+            updateTreeDiagram(currentItem);
           }
         } else {
           welcomeScreenEl.classList.remove('hidden');
@@ -1077,145 +1065,155 @@
       }
     }
 
-    // Update PERT diagram
-function updateCraftingDiagram(item) {
-  const pertDiagramEl = document.getElementById('pert-diagram');
-  pertDiagramEl.innerHTML = '';
-  
-  // Define node positions
-  const nodeSpacingX = 180;
-  const nodeSpacingY = 100;
-  const startX = 20;
-  const startY = 20;
-  
-  // Create the main product node
-  const mainNode = document.createElement('div');
-  mainNode.className = 'pert-node primary';
-  mainNode.style.left = `${startX}px`;
-  mainNode.style.top = `${startY}px`;
-  mainNode.innerHTML = `
-    ${item.title}
-    <span class="quantity">x${item.quantity}</span>
-  `;
-  pertDiagramEl.appendChild(mainNode);
-  
-  // Create component nodes
-  const componentNodes = [];
-  if (item.items && item.items.length > 0) {
-    item.items.forEach((component, index) => {
-      const componentNode = document.createElement('div');
-      componentNode.className = 'pert-node';
-      componentNode.style.left = `${startX + nodeSpacingX}px`;
-      componentNode.style.top = `${startY + index * nodeSpacingY}px`;
-      componentNode.innerHTML = `
-        ${component.name}
-        <span class="quantity">x${component.quantity}</span>
+    // Update tree diagram
+    function updateTreeDiagram(item) {
+      const treeDiagramEl = document.getElementById('tree-diagram');
+      treeDiagramEl.innerHTML = '';
+      
+      // Set diagram dimensions
+      const nodeWidth = 150;
+      const nodeHeight = 60;
+      const horizontalSpacing = 50;
+      const verticalSpacing = 30;
+      const startX = 20;
+      const startY = 50;
+      
+      // Create the main product node
+      const mainNode = document.createElement('div');
+      mainNode.className = 'tree-node primary';
+      mainNode.style.left = `${startX}px`;
+      mainNode.style.top = `${startY}px`;
+      mainNode.innerHTML = `
+        ${item.title}
+        <span class="quantity">x${item.quantity}</span>
       `;
-      pertDiagramEl.appendChild(componentNode);
-      componentNodes.push(componentNode);
+      treeDiagramEl.appendChild(mainNode);
       
-      // Create arrow from component to main product
-      createArrow(componentNode, mainNode, pertDiagramEl);
-    });
-  }
-  
-  // Create material nodes
-  if (item.items && item.items.length > 0) {
-    let materialIndex = 0;
-    
-    item.items.forEach((component, componentIndex) => {
-      const componentNode = componentNodes[componentIndex];
+      // Calculate positions for components
+      const componentStartX = startX + nodeWidth + horizontalSpacing;
+      let maxY = startY;
       
-      component.materials.forEach((material, index) => {
-        const materialNode = document.createElement('div');
-        materialNode.className = `pert-node ${getMaterialBgClass(material.name)}`;
-        materialNode.style.left = `${startX + nodeSpacingX * 2}px`;
-        materialNode.style.top = `${startY + materialIndex * (nodeSpacingY / 1.5)}px`;
-        materialNode.innerHTML = `
-          ${material.name}
-          <span class="quantity">x${material.quantity}</span>
-        `;
-        pertDiagramEl.appendChild(materialNode);
-        
-        // Create arrow from material to component
-        createArrow(materialNode, componentNode, pertDiagramEl);
-        
-        // If this material has submaterials, create those nodes
-        if (component.subMaterials && component.subMaterials[material.name]) {
-          component.subMaterials[material.name].forEach((subMaterial, subIndex) => {
-            const subMaterialNode = document.createElement('div');
-            subMaterialNode.className = `pert-node ${getMaterialBgClass(subMaterial.name)}`;
-            subMaterialNode.style.left = `${startX + nodeSpacingX * 3}px`;
-            subMaterialNode.style.top = `${startY + materialIndex * (nodeSpacingY / 1.5) + subIndex * (nodeSpacingY / 2)}px`;
-            subMaterialNode.innerHTML = `
-              ${subMaterial.name}
-              <span class="quantity">x${subMaterial.quantity}</span>
-            `;
-            pertDiagramEl.appendChild(subMaterialNode);
-            
-            // Create arrow from submaterial to material
-            createArrow(subMaterialNode, materialNode, pertDiagramEl);
-          });
+      // Group components by type
+      const componentGroups = {};
+      
+      item.items.forEach(component => {
+        if (!componentGroups[component.name]) {
+          componentGroups[component.name] = [];
         }
-        
-        materialIndex++;
+        componentGroups[component.name].push(component);
       });
-    });
-  }
-  
-  // Set the diagram size based on the number of nodes
-  const diagramHeight = Math.max(item.items.length * nodeSpacingY, 300);
-  pertDiagramEl.style.height = `${diagramHeight}px`;
-  
-  // Set the container to scroll if needed
-  const pertContainer = document.querySelector('.pert-container');
-  pertContainer.style.maxHeight = `${Math.min(diagramHeight + 40, 500)}px`;
-}
+      
+      // Create component nodes
+      let componentIndex = 0;
+      const componentNodes = {};
+      
+      Object.entries(componentGroups).forEach(([componentName, components]) => {
+        const componentY = startY + componentIndex * (nodeHeight + verticalSpacing);
+        
+        // Create component node
+        const componentNode = document.createElement('div');
+        componentNode.className = 'tree-node';
+        componentNode.style.left = `${componentStartX}px`;
+        componentNode.style.top = `${componentY}px`;
+        componentNode.innerHTML = `
+          ${componentName}
+          <span class="quantity">x${components.reduce((sum, c) => sum + c.quantity, 0)}</span>
+        `;
+        treeDiagramEl.appendChild(componentNode);
+        componentNodes[componentName] = { node: componentNode, y: componentY };
+        
+        // Create line from main product to component
+        createTreeLine(
+          startX + nodeWidth, 
+          startY + nodeHeight / 2, 
+          componentStartX, 
+          componentY + nodeHeight / 2
+        );
+        
+        componentIndex++;
+        maxY = Math.max(maxY, componentY + nodeHeight);
+      });
+      
+      // Create material nodes
+      const materialStartX = componentStartX + nodeWidth + horizontalSpacing;
+      let materialIndex = 0;
+      const materialNodes = {};
+      
+      // Collect all unique materials
+      const allMaterials = new Map();
+      
+      item.items.forEach(component => {
+        component.materials.forEach(material => {
+          if (!materialNodes[material.name]) {
+            const materialY = startY + materialIndex * (nodeHeight + verticalSpacing / 2);
+            
+            // Create material node
+            const materialNode = document.createElement('div');
+            materialNode.className = `tree-node ${getMaterialBgClass(material.name)}`;
+            materialNode.style.left = `${materialStartX}px`;
+            materialNode.style.top = `${materialY}px`;
+            materialNode.innerHTML = `
+              ${material.name}
+              <span class="quantity">x${material.quantity}</span>
+            `;
+            treeDiagramEl.appendChild(materialNode);
+            materialNodes[material.name] = { node: materialNode, y: materialY };
+            
+            // Create line from component to material
+            createTreeLine(
+              componentStartX + nodeWidth, 
+              componentNodes[component.name].y + nodeHeight / 2, 
+              materialStartX, 
+              materialY + nodeHeight / 2
+            );
+            
+            materialIndex++;
+            maxY = Math.max(maxY, materialY + nodeHeight);
+          }
+        });
+      });
+      
+      // Set the diagram size
+      treeDiagramEl.style.height = `${maxY + 50}px`;
+      treeDiagramEl.style.width = `${materialStartX + nodeWidth + 50}px`;
+    }
 
-// Create an arrow between two nodes
-function createArrow(fromNode, toNode, container) {
-  // Get positions
-  const fromRect = fromNode.getBoundingClientRect();
-  const toRect = toNode.getBoundingClientRect();
-  const containerRect = container.getBoundingClientRect();
-  
-  // Calculate relative positions
-  const fromX = fromNode.offsetLeft + fromNode.offsetWidth;
-  const fromY = fromNode.offsetTop + fromNode.offsetHeight / 2;
-  const toX = toNode.offsetLeft;
-  const toY = toNode.offsetTop + toNode.offsetHeight / 2;
-  
-  // Calculate arrow dimensions
-  const length = toX - fromX;
-  const angle = Math.atan2(toY - fromY, toX - fromX) * 180 / Math.PI;
-  
-  // Create arrow element
-  const arrow = document.createElement('div');
-  arrow.className = 'pert-arrow';
-  arrow.style.width = `${length}px`;
-  arrow.style.left = `${fromX}px`;
-  arrow.style.top = `${fromY}px`;
-  arrow.style.transform = `rotate(${angle}deg)`;
-  arrow.style.transformOrigin = '0 0';
-  
-  container.appendChild(arrow);
-}
+    // Create a line between two points in the tree diagram
+    function createTreeLine(x1, y1, x2, y2) {
+      const treeDiagramEl = document.getElementById('tree-diagram');
+      
+      // Calculate the length and angle of the line
+      const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+      const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+      
+      // Create the line element
+      const line = document.createElement('div');
+      line.className = 'tree-line';
+      line.style.width = `${length}px`;
+      line.style.height = '2px';
+      line.style.left = `${x1}px`;
+      line.style.top = `${y1}px`;
+      line.style.transform = `rotate(${angle}deg)`;
+      line.style.transformOrigin = '0 0';
+      
+      treeDiagramEl.appendChild(line);
+    }
 
-// Get material background class
-function getMaterialBgClass(materialName) {
-  switch (materialName) {
-    case 'Iron ingot': return 'iron-bg';
-    case 'Copper ingot': return 'copper-bg';
-    case 'Gold ingot': return 'gold-bg';
-    case 'Silver ingot': return 'silver-bg';
-    case 'Charcoal': return 'charcoal-bg';
-    case 'Fabric': return 'fabric-bg';
-    case 'Polyester': return 'polyester-bg';
-    case 'Wooden planks': return 'wooden-bg';
-    case 'Canister (petrol)': return 'petrol-bg';
-    default: return '';
-  }
-}
+    // Get material background class
+    function getMaterialBgClass(materialName) {
+      switch (materialName) {
+        case 'Iron ingot': return 'iron-bg';
+        case 'Copper ingot': return 'copper-bg';
+        case 'Gold ingot': return 'gold-bg';
+        case 'Silver ingot': return 'silver-bg';
+        case 'Charcoal': return 'charcoal-bg';
+        case 'Fabric': return 'fabric-bg';
+        case 'Polyester': return 'polyester-bg';
+        case 'Wooden planks': return 'wooden-bg';
+        case 'Canister (petrol)': return 'petrol-bg';
+        default: return '';
+      }
+    }
 
     // Get material color class
     function getMaterialColorClass(materialName) {
