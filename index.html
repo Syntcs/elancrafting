@@ -20,6 +20,10 @@
       --gold-color: #DAA520;
       --silver-color: #C0C0C0;
       --charcoal-color: #FF7F50;
+      --fabric-color: #9370DB;
+      --polyester-color: #20B2AA;
+      --wooden-color: #8B4513;
+      --petrol-color: #32CD32;
     }
 
     * {
@@ -342,6 +346,10 @@
     .gold-color { color: var(--gold-color); }
     .silver-color { color: var(--silver-color); }
     .charcoal-color { color: var(--charcoal-color); }
+    .fabric-color { color: var(--fabric-color); }
+    .polyester-color { color: var(--polyester-color); }
+    .wooden-color { color: var(--wooden-color); }
+    .petrol-color { color: var(--petrol-color); }
 
     .hidden {
       display: none !important;
@@ -396,6 +404,12 @@
 
     .welcome-message p {
       margin-bottom: 0.5rem;
+      color: var(--text-medium);
+    }
+
+    .submaterial {
+      padding-left: 1.5rem;
+      font-size: 0.9em;
       color: var(--text-medium);
     }
   </style>
@@ -522,7 +536,11 @@
       "Copper ingot": "#E9967A",
       "Gold ingot": "#DAA520",
       "Silver ingot": "#C0C0C0",
-      "Charcoal": "#FF7F50"
+      "Charcoal": "#FF7F50",
+      "Fabric": "#9370DB",
+      "Polyester": "#20B2AA",
+      "Wooden planks": "#8B4513",
+      "Canister (petrol)": "#32CD32"
     };
 
     // State
@@ -790,6 +808,9 @@
             // Update components table
             componentsTableEl.innerHTML = '';
             currentItem.items.forEach(item => {
+              // Check if this item has submaterials
+              const hasSubMaterials = item.subMaterials && Object.keys(item.subMaterials).length > 0;
+              
               item.materials.forEach((material, index) => {
                 const row = document.createElement('tr');
                 
@@ -808,6 +829,20 @@
                 }
                 
                 componentsTableEl.appendChild(row);
+                
+                // Add submaterials if they exist for this material
+                if (hasSubMaterials && item.subMaterials[material.name]) {
+                  item.subMaterials[material.name].forEach(subMaterial => {
+                    const subRow = document.createElement('tr');
+                    subRow.className = 'submaterial';
+                    subRow.innerHTML = `
+                      <td colspan="2"></td>
+                      <td class="${getMaterialColorClass(subMaterial.name)}">└ ${subMaterial.name}</td>
+                      <td class="text-center">${subMaterial.quantity}</td>
+                    `;
+                    componentsTableEl.appendChild(subRow);
+                  });
+                }
               });
             });
             
@@ -840,6 +875,10 @@
         case 'Gold ingot': return 'gold-color';
         case 'Silver ingot': return 'silver-color';
         case 'Charcoal': return 'charcoal-color';
+        case 'Fabric': return 'fabric-color';
+        case 'Polyester': return 'polyester-color';
+        case 'Wooden planks': return 'wooden-color';
+        case 'Canister (petrol)': return 'petrol-color';
         default: return '';
       }
     }
