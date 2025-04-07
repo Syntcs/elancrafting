@@ -1,4 +1,86 @@
 {
+"base": {
+    "name": "Base",
+        "items": [
+          {
+            "id": "test1",
+            "title": "test1",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Weapon part",
+                "quantity": 55,
+                "materials": [
+                  { "name": "Iron ingot", "quantity": 55 },
+                  { "name": "Copper ingot", "quantity": 55 }
+                ]
+              },
+              {
+                "name": "Stabilizer",
+                "quantity": 30,
+                "materials": [
+                  { "name": "Iron ingot", "quantity": 60 },
+                  { "name": "Gold ingot", "quantity": 30 }
+                ]
+              },
+              {
+                "name": "Attachment Part",
+                "quantity": 34,
+                "materials": [
+                  { "name": "Copper ingot", "quantity": 68 },
+                  { "name": "Silver ingot", "quantity": 34 }
+                ]
+              }
+            ],
+            "totalMaterials": [
+              { "name": "Iron ingot", "quantity": 115 },
+              { "name": "Copper ingot", "quantity": 123 },
+              { "name": "Gold ingot", "quantity": 30 },
+              { "name": "Silver ingot", "quantity": 34 }
+            ],
+            "imageUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png"
+          },
+		  {
+            "id": "test2",
+            "title": "test",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Weapon part",
+                "quantity": 55,
+                "materials": [
+                  { "name": "Iron ingot", "quantity": 55 },
+                  { "name": "Copper ingot", "quantity": 55 }
+                ]
+              },
+              {
+                "name": "Stabilizer",
+                "quantity": 30,
+                "materials": [
+                  { "name": "Iron ingot", "quantity": 60 },
+                  { "name": "Gold ingot", "quantity": 30 }
+                ]
+              },
+              {
+                "name": "Attachment Part",
+                "quantity": 34,
+                "materials": [
+                  { "name": "Copper ingot", "quantity": 68 },
+                  { "name": "Silver ingot", "quantity": 34 }
+                ]
+              }
+            ],
+            "totalMaterials": [
+              { "name": "Iron ingot", "quantity": 115 },
+              { "name": "Copper ingot", "quantity": 123 },
+              { "name": "Gold ingot", "quantity": 30 },
+              { "name": "Silver ingot", "quantity": 34 }
+            ],
+            "imageUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png"
+          }
+        ]
+      }
+  },
   "weapons": {
     "name": "Weapons",
     "subcategories": {
