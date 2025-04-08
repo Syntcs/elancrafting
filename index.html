@@ -426,13 +426,112 @@
       height: 10px;
       background-color: var(--bg-medium);
     }
+
+    /* Mobile Menu Styles */
+    .mobile-menu-button {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background-color: var(--bg-medium);
+      border: 1px solid var(--border-color);
+      border-radius: 0.25rem;
+      color: var(--text-light);
+      cursor: pointer;
+    }
+
+    @media (max-width: 767px) {
+      .mobile-menu-button {
+        display: flex;
+      }
+
+      aside {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 80%;
+        max-width: 300px;
+        z-index: 1000;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+
+      aside.open {
+        transform: translateX(0);
+        display: block;
+      }
+
+      .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        display: none;
+      }
+
+      .sidebar-overlay.open {
+        display: block;
+      }
+    }
+
+    /* Favorites System Styles */
+    .favorite-button {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      padding: 0.25rem;
+      margin-left: 0.5rem;
+      border-radius: 0.25rem;
+      transition: color 0.2s;
+    }
+
+    .favorite-button:hover {
+      color: var(--text-light);
+    }
+
+    .favorite-button.active {
+      color: #FFD700;
+    }
+
+    .favorite-button svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .favorites-category {
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .favorites-empty {
+      color: var(--text-dim);
+      font-size: 0.875rem;
+      text-align: center;
+      padding: 1rem;
+    }
   </style>
 </head>
 <body>
   <!-- Header -->
   <header>
     <div class="header-content">
-      <h1>ELAN Server - Arma Reforger Crafting System</h1>
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <button id="mobile-menu-button" class="mobile-menu-button">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="24" height="24">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <h1>ELAN Server - Arma Reforger Crafting System</h1>
+      </div>
       <div class="search-container">
         <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="8"></circle>
@@ -444,10 +543,22 @@
   </header>
 
   <div class="main-container">
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
     <!-- Sidebar -->
-    <aside>
+    <aside id="sidebar">
       <div class="sidebar-content">
         <h2>Categories</h2>
+        <div class="favorites-category">
+          <button class="category-button" data-category="favorites">
+            <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            Favorites
+          </button>
+          <div id="favorites-list" class="subcategory-list hidden">
+            <div class="favorites-empty">No favorites yet</div>
+          </div>
+        </div>
         <div class="category-list" id="category-list">
           <div class="loading">
             <div class="loading-spinner"></div>
@@ -489,6 +600,11 @@
       <div id="item-display" class="hidden">
         <div class="item-header">
           <h2 class="item-title" id="current-item-title"></h2>
+          <button id="favorite-button" class="favorite-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </button>
           <span class="item-path" id="current-item-path"></span>
         </div>
         <div class="crafting-table">
@@ -1080,6 +1196,110 @@
 
     // Event listeners
     searchInputEl.addEventListener('input', handleSearch);
+
+    // Mobile Menu
+    const mobileMenuButtonEl = document.getElementById('mobile-menu-button');
+    const sidebarEl = document.getElementById('sidebar');
+    const sidebarOverlayEl = document.getElementById('sidebar-overlay');
+
+    mobileMenuButtonEl.addEventListener('click', () => {
+      sidebarEl.classList.toggle('open');
+      sidebarOverlayEl.classList.toggle('open');
+    });
+
+    sidebarOverlayEl.addEventListener('click', () => {
+      sidebarEl.classList.remove('open');
+      sidebarOverlayEl.classList.remove('open');
+    });
+
+    // Favorites System
+    const favoriteButtonEl = document.getElementById('favorite-button');
+    const favoritesListEl = document.getElementById('favorites-list');
+    let favorites = JSON.parse(localStorage.getItem('armaReforgerFavorites')) || [];
+
+    // Toggle favorite status
+    function toggleFavorite(itemId) {
+      const index = favorites.indexOf(itemId);
+      if (index === -1) {
+        favorites.push(itemId);
+      } else {
+        favorites.splice(index, 1);
+      }
+      localStorage.setItem('armaReforgerFavorites', JSON.stringify(favorites));
+      updateFavoriteButton();
+      updateFavoritesList();
+    }
+
+    // Update favorite button state
+    function updateFavoriteButton() {
+      if (!selectedItem) return;
+      
+      if (favorites.includes(selectedItem)) {
+        favoriteButtonEl.classList.add('active');
+        favoriteButtonEl.querySelector('svg').setAttribute('fill', 'currentColor');
+      } else {
+        favoriteButtonEl.classList.remove('active');
+        favoriteButtonEl.querySelector('svg').setAttribute('fill', 'none');
+      }
+    }
+
+    // Update favorites list in sidebar
+    function updateFavoritesList() {
+      favoritesListEl.innerHTML = '';
+      
+      if (favorites.length === 0) {
+        favoritesListEl.innerHTML = '<div class="favorites-empty">No favorites yet</div>';
+        return;
+      }
+      
+      const allItems = getAllItems();
+      const favoriteItems = allItems.filter(item => favorites.includes(item.id));
+      
+      favoriteItems.forEach(item => {
+        const itemEl = document.createElement('button');
+        itemEl.className = 'item-button';
+        itemEl.setAttribute('data-item-id', item.id);
+        itemEl.textContent = item.title;
+        
+        itemEl.addEventListener('click', () => {
+          selectItem(item.id);
+          if (window.innerWidth < 768) {
+            sidebarEl.classList.remove('open');
+            sidebarOverlayEl.classList.remove('open');
+          }
+        });
+        
+        favoritesListEl.appendChild(itemEl);
+      });
+    }
+
+    // Add event listener to favorite button
+    favoriteButtonEl.addEventListener('click', () => {
+      if (selectedItem) {
+        toggleFavorite(selectedItem);
+      }
+    });
+
+    // Toggle favorites category
+    document.querySelector('.favorites-category .category-button').addEventListener('click', () => {
+      favoritesListEl.classList.toggle('hidden');
+      const chevron = document.querySelector('.favorites-category .chevron-icon');
+      if (favoritesListEl.classList.contains('hidden')) {
+        chevron.innerHTML = '<polyline points="9 18 15 12 9 6"></polyline>';
+      } else {
+        chevron.innerHTML = '<polyline points="6 9 12 15 18 9"></polyline>';
+      }
+    });
+
+    // Update UI function - add this to the existing updateUI function
+    const originalUpdateUI = updateUI;
+    updateUI = function() {
+      originalUpdateUI();
+      updateFavoriteButton();
+    };
+
+    // Initialize favorites list
+    updateFavoritesList();
 
     // Load data and initialize the UI
     loadCraftingData();
