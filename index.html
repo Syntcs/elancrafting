@@ -753,7 +753,21 @@
       const allItems = [];
       
       Object.entries(craftingData).forEach(([categoryKey, category]) => {
-        Object.entries(category.subcategories).forEach(([subcategoryKey, subcategory]) => {
+        // Add direct items under the category if they exist
+        if (category.items && Array.isArray(category.items)) {
+          category.items.forEach(item => {
+            allItems.push({
+              ...item,
+              categoryKey,
+              subcategoryKey: null,
+              category: category.name,
+              subcategory: category.name, // Use category name as subcategory for direct items
+            });
+          });
+        }
+        
+        // Add items from subcategories
+        Object.entries(category.subcategories || {}).forEach(([subcategoryKey, subcategory]) => {
           subcategory.items.forEach(item => {
             allItems.push({
               ...item,
@@ -787,10 +801,32 @@
         `;
         
         if (expandedCategories[categoryKey]) {
+          // Show direct items if they exist
+          if (category.items && Array.isArray(category.items) && category.items.length > 0) {
+            const itemsEl = document.createElement('div');
+            itemsEl.className = 'item-list';
+            
+            category.items.forEach(item => {
+              const itemEl = document.createElement('button');
+              itemEl.className = `item-button ${selectedItem === item.id ? 'active' : ''}`;
+              itemEl.setAttribute('data-item-id', item.id);
+              itemEl.textContent = item.title;
+              
+              itemEl.addEventListener('click', () => {
+                selectItem(item.id);
+              });
+              
+              itemsEl.appendChild(itemEl);
+            });
+            
+            categoryEl.appendChild(itemsEl);
+          }
+          
+          // Show subcategories
           const subcategoriesEl = document.createElement('div');
           subcategoriesEl.className = 'subcategory-list';
           
-          Object.entries(category.subcategories).forEach(([subcategoryKey, subcategory]) => {
+          Object.entries(category.subcategories || {}).forEach(([subcategoryKey, subcategory]) => {
             const subcategoryEl = document.createElement('div');
             const subcategoryId = `${categoryKey}-${subcategoryKey}`;
             
@@ -828,7 +864,10 @@
             subcategoriesEl.appendChild(subcategoryEl);
           });
           
-          categoryEl.appendChild(subcategoriesEl);
+          // Only append subcategories if there are any
+          if (subcategoriesEl.children.length > 0) {
+            categoryEl.appendChild(subcategoriesEl);
+          }
         }
         
         categoryListEl.appendChild(categoryEl);
