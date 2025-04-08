@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>v1 ELAN Server - Arma Reforger Crafting System</title>
+  <title>ELAN Server - Arma Reforger Crafting System</title>
   <style>
     :root {
       --bg-dark: #18181b;
@@ -252,6 +252,16 @@
       margin-left: 0.5rem;
     }
 
+    .item-path-link {
+      color: var(--text-medium);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .item-path-link:hover {
+      text-decoration: underline;
+    }
+
     .crafting-table {
       background-color: var(--bg-medium);
       border: 1px solid var(--border-color);
@@ -416,80 +426,6 @@
       height: 10px;
       background-color: var(--bg-medium);
     }
-
-    /* Tree Diagram Styles */
-    .crafting-diagram {
-      margin-top: 1.5rem;
-      background-color: var(--bg-medium);
-      border: 1px solid var(--border-color);
-      border-radius: 0.25rem;
-      padding: 1rem;
-    }
-
-    .tree-container {
-      overflow: auto;
-      padding: 1rem;
-      background-color: var(--bg-darker);
-      border-radius: 0.25rem;
-      min-height: 300px;
-    }
-
-    .tree-diagram {
-      position: relative;
-      min-width: 100%;
-      min-height: 100%;
-    }
-
-    .tree-node {
-      position: absolute;
-      background-color: var(--bg-medium);
-      border: 2px solid var(--border-color);
-      border-radius: 0.5rem;
-      padding: 0.75rem 1rem;
-      min-width: 120px;
-      text-align: center;
-      z-index: 2;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    .tree-node.primary {
-      background-color: var(--bg-light);
-      font-weight: bold;
-      border-width: 2px;
-    }
-
-    .tree-node .quantity {
-      display: block;
-      font-size: 0.75rem;
-      color: var(--text-dim);
-      margin-top: 0.25rem;
-    }
-
-    .tree-line {
-      position: absolute;
-      background-color: var(--border-color);
-      z-index: 1;
-    }
-
-    .iron-bg { background-color: rgba(70, 130, 180, 0.3); }
-    .copper-bg { background-color: rgba(233, 150, 122, 0.3); }
-    .gold-bg { background-color: rgba(218, 165, 32, 0.3); }
-    .silver-bg { background-color: rgba(192, 192, 192, 0.3); }
-    .charcoal-bg { background-color: rgba(255, 127, 80, 0.3); }
-    .fabric-bg { background-color: rgba(147, 112, 219, 0.3); }
-    .polyester-bg { background-color: rgba(32, 178, 170, 0.3); }
-    .wooden-bg { background-color: rgba(139, 69, 19, 0.3); }
-    .petrol-bg { background-color: rgba(50, 205, 50, 0.3); }
-
-    .path-link {
-      color: var(--text-dim);
-      text-decoration: none;
-    }
-
-    .path-link:hover {
-      text-decoration: underline;
-      color: var(--text-light);
-    }
   </style>
 </head>
 <body>
@@ -535,6 +471,13 @@
         </div>
       </div>
 
+      <div id="category-results" class="search-results hidden">
+        <h2 class="search-results-title">Items in "<span id="category-name"></span>"</h2>
+        <div id="category-results-grid" class="search-results-grid">
+          <!-- Category results will be populated by JavaScript -->
+        </div>
+      </div>
+
       <div id="welcome-screen" class="hidden">
         <div class="welcome-message">
           <h2>Welcome to Arma Reforger Crafting System</h2>
@@ -546,9 +489,7 @@
       <div id="item-display" class="hidden">
         <div class="item-header">
           <h2 class="item-title" id="current-item-title"></h2>
-          <span class="item-path" id="current-item-path">
-  <!-- Pfad wird durch JavaScript gefüllt -->
-</span>
+          <span class="item-path" id="current-item-path"></span>
         </div>
         <div class="crafting-table">
           <div class="crafting-table-header">
@@ -591,15 +532,6 @@
                     </tbody>
                   </table>
                 </div>
-
-                <div class="crafting-diagram">
-                  <h3 class="section-title">Crafting Diagram</h3>
-                  <div class="tree-container">
-                    <div id="tree-diagram" class="tree-diagram">
-                      <!-- Tree diagram will be populated by JavaScript -->
-                    </div>
-                  </div>
-                </div>
               </div>
               
               <div>
@@ -636,6 +568,7 @@
     let selectedItem = null;
     let searchQuery = "";
     let dataLoaded = false;
+    let categoryView = null;
 
     // DOM elements
     const loadingIndicatorEl = document.getElementById('loading-indicator');
@@ -644,6 +577,9 @@
     const searchResultsEl = document.getElementById('search-results');
     const searchQueryEl = document.getElementById('search-query');
     const searchResultsGridEl = document.getElementById('search-results-grid');
+    const categoryResultsEl = document.getElementById('category-results');
+    const categoryNameEl = document.getElementById('category-name');
+    const categoryResultsGridEl = document.getElementById('category-results-grid');
     const welcomeScreenEl = document.getElementById('welcome-screen');
     const itemDisplayEl = document.getElementById('item-display');
     const currentItemTitleEl = document.getElementById('current-item-title');
@@ -653,7 +589,6 @@
     const componentsTableEl = document.getElementById('components-table');
     const materialsTableEl = document.getElementById('materials-table');
     const itemImageEl = document.getElementById('item-image');
-    const treeDiagramEl = document.getElementById('tree-diagram');
 
     // Load crafting data from JSON file
     async function loadCraftingData() {
@@ -819,12 +754,20 @@
       selectedItem = itemId;
       searchQuery = '';
       searchInputEl.value = '';
+      categoryView = null;
       updateUI();
     }
 
     // Handle search
     function handleSearch() {
       searchQuery = searchInputEl.value.trim();
+      categoryView = null;
+      updateUI();
+    }
+
+    // Show category items
+    function showCategoryItems(categoryName) {
+      categoryView = categoryName;
       updateUI();
     }
 
@@ -834,6 +777,12 @@
       
       // Update sidebar
       initializeSidebar();
+      
+      // Hide all main content sections initially
+      searchResultsEl.classList.add('hidden');
+      categoryResultsEl.classList.add('hidden');
+      welcomeScreenEl.classList.add('hidden');
+      itemDisplayEl.classList.add('hidden');
       
       // Handle search results
       if (searchQuery) {
@@ -867,125 +816,194 @@
         }
         
         searchResultsEl.classList.remove('hidden');
-        welcomeScreenEl.classList.add('hidden');
-        itemDisplayEl.classList.add('hidden');
-      } else {
-        searchResultsEl.classList.add('hidden');
+      } 
+      // Handle category view
+      else if (categoryView) {
+        const allItems = getAllItems();
+        const filteredItems = allItems.filter(item => 
+          item.category === categoryView || item.subcategory === categoryView
+        );
         
-        // Show item display if an item is selected, otherwise show welcome screen
-        if (selectedItem) {
-          welcomeScreenEl.classList.add('hidden');
-          itemDisplayEl.classList.remove('hidden');
-          
-          // Find the current item
-          const allItems = getAllItems();
-          const currentItem = allItems.find(item => item.id === selectedItem);
-          
-          if (currentItem) {
-            // Update item display
-            currentItemTitleEl.textContent = currentItem.title;
-            currentItemPathEl.innerHTML = `
-  <a href="#" class="path-link" data-type="category" data-value="${currentItem.category}">${currentItem.category}</a> &gt; 
-  <a href="#" class="path-link" data-type="subcategory" data-value="${currentItem.subcategory}">${currentItem.subcategory}</a>
-`;
-
-// Add event listeners to path links
-document.querySelectorAll('.path-link').forEach(link => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    const type = link.getAttribute('data-type');
-    const value = link.getAttribute('data-value');
-    
-    // Show search results for the clicked category/subcategory
-    searchQuery = value;
-    searchInputEl.value = value;
-    updateUI();
-  });
-});
-            craftingTitleEl.textContent = currentItem.title;
-            craftingQuantityEl.textContent = currentItem.quantity;
-            itemImageEl.src = currentItem.imageUrl;
-            itemImageEl.alt = currentItem.title;
-            
-            // Update components table
-            componentsTableEl.innerHTML = '';
-
-            // Check if any item has base materials
-            let hasBaseMaterials = false;
-            currentItem.items.forEach(item => {
-              const hasSubMaterials = item.subMaterials && Object.keys(item.subMaterials).length > 0;
-              if (hasSubMaterials) {
-                hasBaseMaterials = true;
-              }
-            });
-
-            // Update table headers based on whether base materials exist
-            const tableHeaders = document.querySelector('.components-table thead tr');
-            tableHeaders.innerHTML = `
-              <th>Item</th>
-              <th class="text-center">Quantity</th>
-              <th>Material</th>
-              <th class="text-center">Quantity</th>
-              ${hasBaseMaterials ? '<th>Material</th><th class="text-center">Quantity</th>' : ''}
+        categoryNameEl.textContent = categoryView;
+        categoryResultsGridEl.innerHTML = '';
+        
+        if (filteredItems.length > 0) {
+          filteredItems.forEach(item => {
+            const itemEl = document.createElement('div');
+            itemEl.className = 'search-result-item';
+            itemEl.innerHTML = `
+              <div class="search-result-title">${item.title}</div>
+              <div class="search-result-path">${item.category} > ${item.subcategory}</div>
             `;
+            
+            itemEl.addEventListener('click', () => {
+              selectItem(item.id);
+            });
+            
+            categoryResultsGridEl.appendChild(itemEl);
+          });
+        } else {
+          categoryResultsGridEl.innerHTML = '<p>No items found in this category.</p>';
+        }
+        
+        categoryResultsEl.classList.remove('hidden');
+      }
+      // Show item display if an item is selected, otherwise show welcome screen
+      else if (selectedItem) {
+        // Find the current item
+        const allItems = getAllItems();
+        const currentItem = allItems.find(item => item.id === selectedItem);
+        
+        if (currentItem) {
+          // Update item display
+          currentItemTitleEl.textContent = currentItem.title;
+          
+          // Create clickable path
+          const pathHTML = `
+            <span class="item-path-link" data-category="${currentItem.category}">${currentItem.category}</span> > 
+            <span class="item-path-link" data-category="${currentItem.subcategory}">${currentItem.subcategory}</span>
+          `;
+          currentItemPathEl.innerHTML = pathHTML;
+          
+          // Add event listeners to path links
+          document.querySelectorAll('.item-path-link').forEach(link => {
+            link.addEventListener('click', () => {
+              const category = link.getAttribute('data-category');
+              showCategoryItems(category);
+            });
+          });
+          
+          craftingTitleEl.textContent = currentItem.title;
+          craftingQuantityEl.textContent = currentItem.quantity;
+          itemImageEl.src = currentItem.imageUrl;
+          itemImageEl.alt = currentItem.title;
+          
+          // Update components table
+          componentsTableEl.innerHTML = '';
 
-            // Process each component
-            for (let itemIndex = 0; itemIndex < currentItem.items.length; itemIndex++) {
-              const item = currentItem.items[itemIndex];
-              
-              // Check if this item has submaterials
-              const hasSubMaterials = item.subMaterials && Object.keys(item.subMaterials).length > 0;
-              
-              // Create the first row with the primary component
-              const firstRow = document.createElement('tr');
-              
-              // First two columns are always the component name and quantity
-              let firstRowHTML = `
-                <td>${item.name}</td>
-                <td class="text-center">${item.quantity}</td>
+          // Check if any item has base materials
+          let hasBaseMaterials = false;
+          currentItem.items.forEach(item => {
+            const hasSubMaterials = item.subMaterials && Object.keys(item.subMaterials).length > 0;
+            if (hasSubMaterials) {
+              hasBaseMaterials = true;
+            }
+          });
+
+          // Update table headers based on whether base materials exist
+          const tableHeaders = document.querySelector('.components-table thead tr');
+          tableHeaders.innerHTML = `
+            <th>Item</th>
+            <th class="text-center">Quantity</th>
+            <th>Material</th>
+            <th class="text-center">Quantity</th>
+            ${hasBaseMaterials ? '<th>Material</th><th class="text-center">Quantity</th>' : ''}
+          `;
+
+          // Process each component
+          for (let itemIndex = 0; itemIndex < currentItem.items.length; itemIndex++) {
+            const item = currentItem.items[itemIndex];
+            
+            // Check if this item has submaterials
+            const hasSubMaterials = item.subMaterials && Object.keys(item.subMaterials).length > 0;
+            
+            // Create the first row with the primary component
+            const firstRow = document.createElement('tr');
+            
+            // First two columns are always the component name and quantity
+            let firstRowHTML = `
+              <td>${item.name}</td>
+              <td class="text-center">${item.quantity}</td>
+            `;
+            
+            // Add the first material
+            if (item.materials.length > 0) {
+              firstRowHTML += `
+                <td class="${getMaterialColorClass(item.materials[0].name)}">${item.materials[0].name}</td>
+                <td class="text-center">${item.materials[0].quantity}</td>
               `;
               
-              // Add the first material
-              if (item.materials.length > 0) {
-                firstRowHTML += `
-                  <td class="${getMaterialColorClass(item.materials[0].name)}">${item.materials[0].name}</td>
-                  <td class="text-center">${item.materials[0].quantity}</td>
-                `;
-                
-                // Check if this material has submaterials
-                if (hasSubMaterials && item.subMaterials[item.materials[0].name] && item.subMaterials[item.materials[0].name].length > 0) {
-                  if (hasBaseMaterials) {
-                    firstRowHTML += `
-                      <td class="${getMaterialColorClass(item.subMaterials[item.materials[0].name][0].name)}">${item.subMaterials[item.materials[0].name][0].name}</td>
-                      <td class="text-center">${item.subMaterials[item.materials[0].name][0].quantity}</td>
-                    `;
-                  }
-                } else if (hasBaseMaterials) {
-                  firstRowHTML += `
-                    <td></td>
-                    <td></td>
-                  `;
-                }
-              } else {
-                firstRowHTML += `
-                  <td></td>
-                  <td></td>
-                `;
+              // Check if this material has submaterials
+              if (hasSubMaterials && item.subMaterials[item.materials[0].name] && item.subMaterials[item.materials[0].name].length > 0) {
                 if (hasBaseMaterials) {
                   firstRowHTML += `
-                    <td></td>
-                    <td></td>
+                    <td class="${getMaterialColorClass(item.subMaterials[item.materials[0].name][0].name)}">${item.subMaterials[item.materials[0].name][0].name}</td>
+                    <td class="text-center">${item.subMaterials[item.materials[0].name][0].quantity}</td>
                   `;
                 }
+              } else if (hasBaseMaterials) {
+                firstRowHTML += `
+                  <td></td>
+                  <td></td>
+                `;
               }
+            } else {
+              firstRowHTML += `
+                <td></td>
+                <td></td>
+              `;
+              if (hasBaseMaterials) {
+                firstRowHTML += `
+                  <td></td>
+                  <td></td>
+                `;
+              }
+            }
+            
+            firstRow.innerHTML = firstRowHTML;
+            componentsTableEl.appendChild(firstRow);
+            
+            // Add rows for additional submaterials of the first material
+            if (hasSubMaterials && item.materials.length > 0 && item.subMaterials[item.materials[0].name] && item.subMaterials[item.materials[0].name].length > 1) {
+              for (let i = 1; i < item.subMaterials[item.materials[0].name].length; i++) {
+                const subMaterial = item.subMaterials[item.materials[0].name][i];
+                const subRow = document.createElement('tr');
+                let subRowHTML = `
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                `;
+                
+                if (hasBaseMaterials) {
+                  subRowHTML += `
+                    <td class="${getMaterialColorClass(subMaterial.name)}">${subMaterial.name}</td>
+                    <td class="text-center">${subMaterial.quantity}</td>
+                  `;
+                }
+                
+                subRow.innerHTML = subRowHTML;
+                componentsTableEl.appendChild(subRow);
+              }
+            }
+            
+            // Add rows for additional materials
+            for (let i = 1; i < item.materials.length; i++) {
+              const material = item.materials[i];
+              const materialRow = document.createElement('tr');
               
-              firstRow.innerHTML = firstRowHTML;
-              componentsTableEl.appendChild(firstRow);
+              let materialRowHTML = `
+                <td></td>
+                <td></td>
+                <td class="${getMaterialColorClass(material.name)}">${material.name}</td>
+                <td class="text-center">${material.quantity}</td>
+              `;
               
-              // Add rows for additional submaterials of the first material
-              if (hasSubMaterials && item.materials.length > 0 && item.subMaterials[item.materials[0].name] && item.subMaterials[item.materials[0].name].length > 1) {
-                for (let i = 1; i < item.subMaterials[item.materials[0].name].length; i++) {
-                  const subMaterial = item.subMaterials[item.materials[0].name][i];
+              // Check if this material has submaterials
+              if (hasSubMaterials && item.subMaterials[material.name] && item.subMaterials[material.name].length > 0) {
+                if (hasBaseMaterials) {
+                  materialRowHTML += `
+                    <td class="${getMaterialColorClass(item.subMaterials[material.name][0].name)}">${item.subMaterials[material.name][0].name}</td>
+                    <td class="text-center">${item.subMaterials[material.name][0].quantity}</td>
+                  `;
+                }
+                
+                materialRow.innerHTML = materialRowHTML;
+                componentsTableEl.appendChild(materialRow);
+                
+                // Add rows for additional submaterials
+                for (let j = 1; j < item.subMaterials[material.name].length; j++) {
+                  const subMaterial = item.subMaterials[material.name][j];
                   const subRow = document.createElement('tr');
                   let subRowHTML = `
                     <td></td>
@@ -1004,283 +1022,43 @@ document.querySelectorAll('.path-link').forEach(link => {
                   subRow.innerHTML = subRowHTML;
                   componentsTableEl.appendChild(subRow);
                 }
-              }
-              
-              // Add rows for additional materials
-              for (let i = 1; i < item.materials.length; i++) {
-                const material = item.materials[i];
-                const materialRow = document.createElement('tr');
-                
-                let materialRowHTML = `
-                  <td></td>
-                  <td></td>
-                  <td class="${getMaterialColorClass(material.name)}">${material.name}</td>
-                  <td class="text-center">${material.quantity}</td>
-                `;
-                
-                // Check if this material has submaterials
-                if (hasSubMaterials && item.subMaterials[material.name] && item.subMaterials[material.name].length > 0) {
-                  if (hasBaseMaterials) {
-                    materialRowHTML += `
-                      <td class="${getMaterialColorClass(item.subMaterials[material.name][0].name)}">${item.subMaterials[material.name][0].name}</td>
-                      <td class="text-center">${item.subMaterials[material.name][0].quantity}</td>
-                    `;
-                  }
-                  
-                  materialRow.innerHTML = materialRowHTML;
-                  componentsTableEl.appendChild(materialRow);
-                  
-                  // Add rows for additional submaterials
-                  for (let j = 1; j < item.subMaterials[material.name].length; j++) {
-                    const subMaterial = item.subMaterials[material.name][j];
-                    const subRow = document.createElement('tr');
-                    let subRowHTML = `
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                    `;
-                    
-                    if (hasBaseMaterials) {
-                      subRowHTML += `
-                        <td class="${getMaterialColorClass(subMaterial.name)}">${subMaterial.name}</td>
-                        <td class="text-center">${subMaterial.quantity}</td>
-                      `;
-                    }
-                    
-                    subRow.innerHTML = subRowHTML;
-                    componentsTableEl.appendChild(subRow);
-                  }
-                } else {
-                  if (hasBaseMaterials) {
-                    materialRowHTML += `
-                      <td></td>
-                      <td></td>
-                    `;
-                  }
-                  
-                  materialRow.innerHTML = materialRowHTML;
-                  componentsTableEl.appendChild(materialRow);
+              } else {
+                if (hasBaseMaterials) {
+                  materialRowHTML += `
+                    <td></td>
+                    <td></td>
+                  `;
                 }
-              }
-              
-              // Add a separator row if this is not the last item
-              if (itemIndex < currentItem.items.length - 1) {
-                const separatorRow = document.createElement('tr');
-                let separatorHTML = `<td colspan="${hasBaseMaterials ? 6 : 4}" style="height: 10px; background-color: var(--bg-medium);"></td>`;
-                separatorRow.innerHTML = separatorHTML;
-                componentsTableEl.appendChild(separatorRow);
+                
+                materialRow.innerHTML = materialRowHTML;
+                componentsTableEl.appendChild(materialRow);
               }
             }
             
-            // Update materials table
-            materialsTableEl.innerHTML = '';
-            currentItem.totalMaterials.forEach(material => {
-              const row = document.createElement('tr');
-              row.innerHTML = `
-                <td class="${getMaterialColorClass(material.name)}">${material.name}</td>
-                <td class="text-center">${material.quantity}</td>
-              `;
-              materialsTableEl.appendChild(row);
-            });
-            
-            // Update tree diagram
-            updateTreeDiagram(currentItem);
+            // Add a separator row if this is not the last item
+            if (itemIndex < currentItem.items.length - 1) {
+              const separatorRow = document.createElement('tr');
+              let separatorHTML = `<td colspan="${hasBaseMaterials ? 6 : 4}" style="height: 10px; background-color: var(--bg-medium);"></td>`;
+              separatorRow.innerHTML = separatorHTML;
+              componentsTableEl.appendChild(separatorRow);
+            }
           }
-        } else {
-          welcomeScreenEl.classList.remove('hidden');
-          itemDisplayEl.classList.add('hidden');
+          
+          // Update materials table
+          materialsTableEl.innerHTML = '';
+          currentItem.totalMaterials.forEach(material => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td class="${getMaterialColorClass(material.name)}">${material.name}</td>
+              <td class="text-center">${material.quantity}</td>
+            `;
+            materialsTableEl.appendChild(row);
+          });
+          
+          itemDisplayEl.classList.remove('hidden');
         }
-      }
-    }
-
-// Update tree diagram
-function updateTreeDiagram(item) {
-  const treeDiagramEl = document.getElementById('tree-diagram');
-  treeDiagramEl.innerHTML = '';
-  
-  // Set diagram dimensions
-  const nodeWidth = 150;
-  const nodeHeight = 60;
-  const horizontalSpacing = 180;
-  const verticalSpacing = 20;
-  
-  // Create the main product node (leftmost)
-  const mainNode = document.createElement('div');
-  mainNode.className = 'tree-node primary';
-  mainNode.innerHTML = `
-    ${item.title}
-    <span class="quantity">x${item.quantity}</span>
-  `;
-  treeDiagramEl.appendChild(mainNode);
-  
-  // Group components by type
-  const componentGroups = {};
-  
-  item.items.forEach(component => {
-    if (!componentGroups[component.name]) {
-      componentGroups[component.name] = [];
-    }
-    componentGroups[component.name].push(component);
-  });
-  
-  // Count total number of components
-  const componentCount = Object.keys(componentGroups).length;
-  
-  // Calculate total height needed for components
-  const totalComponentHeight = componentCount * nodeHeight + (componentCount - 1) * verticalSpacing;
-  
-  // Create component nodes (middle column)
-  let componentIndex = 0;
-  const componentNodes = {};
-  
-  // Calculate starting Y position to center components
-  const startY = Math.max(0, (nodeHeight - totalComponentHeight) / 2);
-  const mainNodeX = 20;
-  const mainNodeY = startY + totalComponentHeight / 2 - nodeHeight / 2;
-  
-  // Position the main node
-  mainNode.style.left = `${mainNodeX}px`;
-  mainNode.style.top = `${mainNodeY}px`;
-  
-  // Calculate positions for components
-  const componentStartX = mainNodeX + nodeWidth + horizontalSpacing;
-  
-  // Create all material nodes first to calculate total height
-  const allMaterials = new Set();
-  item.items.forEach(component => {
-    component.materials.forEach(material => {
-      allMaterials.add(material.name);
-    });
-  });
-  
-  const materialCount = allMaterials.size;
-  const totalMaterialHeight = materialCount * nodeHeight + (materialCount - 1) * verticalSpacing;
-  
-  // Calculate component positions
-  Object.entries(componentGroups).forEach(([componentName, components], index) => {
-    const componentY = startY + index * (nodeHeight + verticalSpacing);
-    
-    // Create component node
-    const componentNode = document.createElement('div');
-    componentNode.className = 'tree-node';
-    componentNode.style.left = `${componentStartX}px`;
-    componentNode.style.top = `${componentY}px`;
-    componentNode.innerHTML = `
-      ${componentName}
-      <span class="quantity">x${components.reduce((sum, c) => sum + c.quantity, 0)}</span>
-    `;
-    treeDiagramEl.appendChild(componentNode);
-    componentNodes[componentName] = { node: componentNode, y: componentY };
-  });
-  
-  // Create material nodes (rightmost column)
-  const materialStartX = componentStartX + nodeWidth + horizontalSpacing;
-  const materialStartY = Math.max(0, (totalComponentHeight - totalMaterialHeight) / 2);
-  
-  let materialIndex = 0;
-  const materialNodes = {};
-  
-  // Create material nodes
-  allMaterials.forEach(materialName => {
-    const materialY = materialStartY + materialIndex * (nodeHeight + verticalSpacing);
-    
-    // Create material node
-    const materialNode = document.createElement('div');
-    materialNode.className = `tree-node ${getMaterialBgClass(materialName)}`;
-    materialNode.style.left = `${materialStartX}px`;
-    materialNode.style.top = `${materialY}px`;
-    
-    // Calculate total quantity for this material
-    let totalQuantity = 0;
-    item.items.forEach(component => {
-      component.materials.forEach(material => {
-        if (material.name === materialName) {
-          totalQuantity += material.quantity;
-        }
-      });
-    });
-    
-    materialNode.innerHTML = `
-      ${materialName}
-      <span class="quantity">x${totalQuantity}</span>
-    `;
-    treeDiagramEl.appendChild(materialNode);
-    materialNodes[materialName] = { node: materialNode, y: materialY };
-    
-    materialIndex++;
-  });
-  
-  // Create connections from main product to components
-  Object.entries(componentNodes).forEach(([componentName, componentData]) => {
-    createTreeLine(
-      mainNodeX + nodeWidth, 
-      mainNodeY + nodeHeight / 2, 
-      componentStartX, 
-      componentData.y + nodeHeight / 2
-    );
-  });
-  
-  // Create connections from components to materials
-  item.items.forEach(component => {
-    component.materials.forEach(material => {
-      if (componentNodes[component.name] && materialNodes[material.name]) {
-        createTreeLine(
-          componentStartX + nodeWidth, 
-          componentNodes[component.name].y + nodeHeight / 2, 
-          materialStartX, 
-          materialNodes[material.name].y + nodeHeight / 2
-        );
-      }
-    });
-  });
-  
-  // Set the diagram size
-  const diagramHeight = Math.max(
-    mainNodeY + nodeHeight + 50,
-    startY + totalComponentHeight + 50,
-    materialStartY + totalMaterialHeight + 50
-  );
-  const diagramWidth = materialStartX + nodeWidth + 50;
-  
-  treeDiagramEl.style.height = `${diagramHeight}px`;
-  treeDiagramEl.style.width = `${diagramWidth}px`;
-}
-
-    // Create a line between two points in the tree diagram
-    function createTreeLine(x1, y1, x2, y2) {
-      const treeDiagramEl = document.getElementById('tree-diagram');
-      
-      // Calculate the length and angle of the line
-      const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-      const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
-      
-      // Create the line element
-      const line = document.createElement('div');
-      line.className = 'tree-line';
-      line.style.width = `${length}px`;
-      line.style.height = '2px';
-      line.style.left = `${x1}px`;
-      line.style.top = `${y1}px`;
-      line.style.transform = `rotate(${angle}deg)`;
-      line.style.transformOrigin = '0 0';
-      
-      treeDiagramEl.appendChild(line);
-    }
-
-    // Get material background class
-    function getMaterialBgClass(materialName) {
-      switch (materialName) {
-        case 'Iron ingot': return 'iron-bg';
-        case 'Copper ingot': return 'copper-bg';
-        case 'Gold ingot': return 'gold-bg';
-        case 'Silver ingot': return 'silver-bg';
-        case 'Charcoal': return 'charcoal-bg';
-        case 'Fabric': return 'fabric-bg';
-        case 'Polyester': return 'polyester-bg';
-        case 'Wooden planks': return 'wooden-bg';
-        case 'Canister (petrol)': return 'petrol-bg';
-        default: return '';
+      } else {
+        welcomeScreenEl.classList.remove('hidden');
       }
     }
 
