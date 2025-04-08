@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Team ELAN - Crafting Recipes</title>
+  <title>v1 ELAN Server - Arma Reforger Crafting System</title>
   <style>
     :root {
       --bg-dark: #18181b;
@@ -480,13 +480,23 @@
     .polyester-bg { background-color: rgba(32, 178, 170, 0.3); }
     .wooden-bg { background-color: rgba(139, 69, 19, 0.3); }
     .petrol-bg { background-color: rgba(50, 205, 50, 0.3); }
+
+    .path-link {
+      color: var(--text-dim);
+      text-decoration: none;
+    }
+
+    .path-link:hover {
+      text-decoration: underline;
+      color: var(--text-light);
+    }
   </style>
 </head>
 <body>
   <!-- Header -->
   <header>
     <div class="header-content">
-      <h1>Team ELAN - Crafting Recipes</h1>
+      <h1>ELAN Server - Arma Reforger Crafting System</h1>
       <div class="search-container">
         <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="8"></circle>
@@ -536,7 +546,9 @@
       <div id="item-display" class="hidden">
         <div class="item-header">
           <h2 class="item-title" id="current-item-title"></h2>
-          <span class="item-path" id="current-item-path"></span>
+          <span class="item-path" id="current-item-path">
+  <!-- Pfad wird durch JavaScript gefüllt -->
+</span>
         </div>
         <div class="crafting-table">
           <div class="crafting-table-header">
@@ -673,6 +685,13 @@
           <div>
             <p>Error loading crafting data. Please check if the JSON file exists and is valid.</p>
             <p style="color: red; margin-top: 0.5rem;">${error.message}</p>
+            <p style="margin-top: 1rem;">Note: To load external JSON files, you need to run this page on a web server.</p>
+            <p>You can use a simple local server like:</p>
+            <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+              <li>Python: <code>python -m http.server</code></li>
+              <li>Node.js: <code>npx serve</code></li>
+              <li>VS Code Live Server extension</li>
+            </ul>
           </div>
         `;
       }
@@ -865,7 +884,24 @@
           if (currentItem) {
             // Update item display
             currentItemTitleEl.textContent = currentItem.title;
-            currentItemPathEl.textContent = `${currentItem.category} > ${currentItem.subcategory}`;
+            currentItemPathEl.innerHTML = `
+  <a href="#" class="path-link" data-type="category" data-value="${currentItem.category}">${currentItem.category}</a> &gt; 
+  <a href="#" class="path-link" data-type="subcategory" data-value="${currentItem.subcategory}">${currentItem.subcategory}</a>
+`;
+
+// Add event listeners to path links
+document.querySelectorAll('.path-link').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const type = link.getAttribute('data-type');
+    const value = link.getAttribute('data-value');
+    
+    // Show search results for the clicked category/subcategory
+    searchQuery = value;
+    searchInputEl.value = value;
+    updateUI();
+  });
+});
             craftingTitleEl.textContent = currentItem.title;
             craftingQuantityEl.textContent = currentItem.quantity;
             itemImageEl.src = currentItem.imageUrl;
@@ -1058,118 +1094,158 @@
       }
     }
 
-    // Update tree diagram
-    function updateTreeDiagram(item) {
-      const treeDiagramEl = document.getElementById('tree-diagram');
-      treeDiagramEl.innerHTML = '';
-      
-      // Set diagram dimensions
-      const nodeWidth = 150;
-      const nodeHeight = 60;
-      const horizontalSpacing = 50;
-      const verticalSpacing = 30;
-      const startX = 20;
-      const startY = 50;
-      
-      // Create the main product node
-      const mainNode = document.createElement('div');
-      mainNode.className = 'tree-node primary';
-      mainNode.style.left = `${startX}px`;
-      mainNode.style.top = `${startY}px`;
-      mainNode.innerHTML = `
-        ${item.title}
-        <span class="quantity">x${item.quantity}</span>
-      `;
-      treeDiagramEl.appendChild(mainNode);
-      
-      // Calculate positions for components
-      const componentStartX = startX + nodeWidth + horizontalSpacing;
-      let maxY = startY;
-      
-      // Group components by type
-      const componentGroups = {};
-      
-      item.items.forEach(component => {
-        if (!componentGroups[component.name]) {
-          componentGroups[component.name] = [];
-        }
-        componentGroups[component.name].push(component);
-      });
-      
-      // Create component nodes
-      let componentIndex = 0;
-      const componentNodes = {};
-      
-      Object.entries(componentGroups).forEach(([componentName, components]) => {
-        const componentY = startY + componentIndex * (nodeHeight + verticalSpacing);
-        
-        // Create component node
-        const componentNode = document.createElement('div');
-        componentNode.className = 'tree-node';
-        componentNode.style.left = `${componentStartX}px`;
-        componentNode.style.top = `${componentY}px`;
-        componentNode.innerHTML = `
-          ${componentName}
-          <span class="quantity">x${components.reduce((sum, c) => sum + c.quantity, 0)}</span>
-        `;
-        treeDiagramEl.appendChild(componentNode);
-        componentNodes[componentName] = { node: componentNode, y: componentY };
-        
-        // Create line from main product to component
-        createTreeLine(
-          startX + nodeWidth, 
-          startY + nodeHeight / 2, 
-          componentStartX, 
-          componentY + nodeHeight / 2
-        );
-        
-        componentIndex++;
-        maxY = Math.max(maxY, componentY + nodeHeight);
-      });
-      
-      // Create material nodes
-      const materialStartX = componentStartX + nodeWidth + horizontalSpacing;
-      let materialIndex = 0;
-      const materialNodes = {};
-      
-      // Collect all unique materials
-      const allMaterials = new Map();
-      
-      item.items.forEach(component => {
-        component.materials.forEach(material => {
-          if (!materialNodes[material.name]) {
-            const materialY = startY + materialIndex * (nodeHeight + verticalSpacing / 2);
-            
-            // Create material node
-            const materialNode = document.createElement('div');
-            materialNode.className = `tree-node ${getMaterialBgClass(material.name)}`;
-            materialNode.style.left = `${materialStartX}px`;
-            materialNode.style.top = `${materialY}px`;
-            materialNode.innerHTML = `
-              ${material.name}
-              <span class="quantity">x${material.quantity}</span>
-            `;
-            treeDiagramEl.appendChild(materialNode);
-            materialNodes[material.name] = { node: materialNode, y: materialY };
-            
-            // Create line from component to material
-            createTreeLine(
-              componentStartX + nodeWidth, 
-              componentNodes[component.name].y + nodeHeight / 2, 
-              materialStartX, 
-              materialY + nodeHeight / 2
-            );
-            
-            materialIndex++;
-            maxY = Math.max(maxY, materialY + nodeHeight);
-          }
-        });
-      });
-      
-      // Set the diagram size
-      treeDiagramEl.style.height = `${maxY + 50}px`;
-      treeDiagramEl.style.width = `${materialStartX + nodeWidth + 50}px`;
+// Update tree diagram
+function updateTreeDiagram(item) {
+  const treeDiagramEl = document.getElementById('tree-diagram');
+  treeDiagramEl.innerHTML = '';
+  
+  // Set diagram dimensions
+  const nodeWidth = 150;
+  const nodeHeight = 60;
+  const horizontalSpacing = 180;
+  const verticalSpacing = 20;
+  
+  // Create the main product node (leftmost)
+  const mainNode = document.createElement('div');
+  mainNode.className = 'tree-node primary';
+  mainNode.innerHTML = `
+    ${item.title}
+    <span class="quantity">x${item.quantity}</span>
+  `;
+  treeDiagramEl.appendChild(mainNode);
+  
+  // Group components by type
+  const componentGroups = {};
+  
+  item.items.forEach(component => {
+    if (!componentGroups[component.name]) {
+      componentGroups[component.name] = [];
     }
+    componentGroups[component.name].push(component);
+  });
+  
+  // Count total number of components
+  const componentCount = Object.keys(componentGroups).length;
+  
+  // Calculate total height needed for components
+  const totalComponentHeight = componentCount * nodeHeight + (componentCount - 1) * verticalSpacing;
+  
+  // Create component nodes (middle column)
+  let componentIndex = 0;
+  const componentNodes = {};
+  
+  // Calculate starting Y position to center components
+  const startY = Math.max(0, (nodeHeight - totalComponentHeight) / 2);
+  const mainNodeX = 20;
+  const mainNodeY = startY + totalComponentHeight / 2 - nodeHeight / 2;
+  
+  // Position the main node
+  mainNode.style.left = `${mainNodeX}px`;
+  mainNode.style.top = `${mainNodeY}px`;
+  
+  // Calculate positions for components
+  const componentStartX = mainNodeX + nodeWidth + horizontalSpacing;
+  
+  // Create all material nodes first to calculate total height
+  const allMaterials = new Set();
+  item.items.forEach(component => {
+    component.materials.forEach(material => {
+      allMaterials.add(material.name);
+    });
+  });
+  
+  const materialCount = allMaterials.size;
+  const totalMaterialHeight = materialCount * nodeHeight + (materialCount - 1) * verticalSpacing;
+  
+  // Calculate component positions
+  Object.entries(componentGroups).forEach(([componentName, components], index) => {
+    const componentY = startY + index * (nodeHeight + verticalSpacing);
+    
+    // Create component node
+    const componentNode = document.createElement('div');
+    componentNode.className = 'tree-node';
+    componentNode.style.left = `${componentStartX}px`;
+    componentNode.style.top = `${componentY}px`;
+    componentNode.innerHTML = `
+      ${componentName}
+      <span class="quantity">x${components.reduce((sum, c) => sum + c.quantity, 0)}</span>
+    `;
+    treeDiagramEl.appendChild(componentNode);
+    componentNodes[componentName] = { node: componentNode, y: componentY };
+  });
+  
+  // Create material nodes (rightmost column)
+  const materialStartX = componentStartX + nodeWidth + horizontalSpacing;
+  const materialStartY = Math.max(0, (totalComponentHeight - totalMaterialHeight) / 2);
+  
+  let materialIndex = 0;
+  const materialNodes = {};
+  
+  // Create material nodes
+  allMaterials.forEach(materialName => {
+    const materialY = materialStartY + materialIndex * (nodeHeight + verticalSpacing);
+    
+    // Create material node
+    const materialNode = document.createElement('div');
+    materialNode.className = `tree-node ${getMaterialBgClass(materialName)}`;
+    materialNode.style.left = `${materialStartX}px`;
+    materialNode.style.top = `${materialY}px`;
+    
+    // Calculate total quantity for this material
+    let totalQuantity = 0;
+    item.items.forEach(component => {
+      component.materials.forEach(material => {
+        if (material.name === materialName) {
+          totalQuantity += material.quantity;
+        }
+      });
+    });
+    
+    materialNode.innerHTML = `
+      ${materialName}
+      <span class="quantity">x${totalQuantity}</span>
+    `;
+    treeDiagramEl.appendChild(materialNode);
+    materialNodes[materialName] = { node: materialNode, y: materialY };
+    
+    materialIndex++;
+  });
+  
+  // Create connections from main product to components
+  Object.entries(componentNodes).forEach(([componentName, componentData]) => {
+    createTreeLine(
+      mainNodeX + nodeWidth, 
+      mainNodeY + nodeHeight / 2, 
+      componentStartX, 
+      componentData.y + nodeHeight / 2
+    );
+  });
+  
+  // Create connections from components to materials
+  item.items.forEach(component => {
+    component.materials.forEach(material => {
+      if (componentNodes[component.name] && materialNodes[material.name]) {
+        createTreeLine(
+          componentStartX + nodeWidth, 
+          componentNodes[component.name].y + nodeHeight / 2, 
+          materialStartX, 
+          materialNodes[material.name].y + nodeHeight / 2
+        );
+      }
+    });
+  });
+  
+  // Set the diagram size
+  const diagramHeight = Math.max(
+    mainNodeY + nodeHeight + 50,
+    startY + totalComponentHeight + 50,
+    materialStartY + totalMaterialHeight + 50
+  );
+  const diagramWidth = materialStartX + nodeWidth + 50;
+  
+  treeDiagramEl.style.height = `${diagramHeight}px`;
+  treeDiagramEl.style.width = `${diagramWidth}px`;
+}
 
     // Create a line between two points in the tree diagram
     function createTreeLine(x1, y1, x2, y2) {
@@ -1232,4 +1308,3 @@
   </script>
 </body>
 </html>
-
