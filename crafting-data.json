@@ -1,13 +1,15 @@
 {
     "base": {
         "name": "Base",
-        "subcategories": {
-            "base": {
-                "name": "Base",
+        "items": [
+            {
+                "id": "generic_weapon1",
+                "title": "Combat Knife",
+                "quantity": 1,
                 "items": [
                     {
-                        "id": "base2",
-                        "title": "base2",
+                        "id": "sig-mcx",
+                        "title": "SIG MCX",
                         "quantity": 1,
                         "items": [
                             {
@@ -73,9 +75,27 @@
                         ],
                         "imageUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png"
                     }
+                ],
+                "totalMaterials": [
+                    {
+                        "name": "Iron ingot",
+                        "quantity": 115
+                    },
+                    {
+                        "name": "Copper ingot",
+                        "quantity": 123
+                    },
+                    {
+                        "name": "Gold ingot",
+                        "quantity": 30
+                    },
+                    {
+                        "name": "Silver ingot",
+                        "quantity": 34
+                    }
                 ]
             }
-        }
+        ]
     },
     "weapons": {
         "name": "Weapons",
