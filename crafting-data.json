@@ -2,76 +2,30 @@
   "base": {
     "name": "Base",
     "subcategories": {
-      "base": {
-        "name": "Base",
+      "vehicle_base": {
+        "name": "Vehicle",
         "items": [
           {
-            "id": "base2",
-            "title": "base2",
+            "id": "mc",
+            "title": "Mechanical Component",
             "quantity": 1,
             "items": [
               {
-                "name": "Weapon part",
-                "quantity": 55,
+                "name": "Mechanical Component",
+                "quantity": 1,
                 "materials": [
                   {
                     "name": "Iron ingot",
-                    "quantity": 55
+                    "quantity": 2
                   },
                   {
                     "name": "Copper ingot",
-                    "quantity": 55
-                  }
-                ]
-              },
-              {
-                "name": "Stabilizer",
-                "quantity": 30,
-                "materials": [
-                  {
-                    "name": "Iron ingot",
-                    "quantity": 60
-                  },
-                  {
-                    "name": "Gold ingot",
-                    "quantity": 30
-                  }
-                ]
-              },
-              {
-                "name": "Attachment Part",
-                "quantity": 34,
-                "materials": [
-                  {
-                    "name": "Copper ingot",
-                    "quantity": 68
-                  },
-                  {
-                    "name": "Silver ingot",
-                    "quantity": 34
+                    "quantity": 2
                   }
                 ]
               }
             ],
-            "totalMaterials": [
-              {
-                "name": "Iron ingot",
-                "quantity": 4825
-              },
-              {
-                "name": "Copper ingot",
-                "quantity": 5337
-              },
-              {
-                "name": "Gold ingot",
-                "quantity": 900
-              },
-              {
-                "name": "Silver ingot",
-                "quantity": 1156
-              }
-            ],
-            "imageUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png"
+            "totalMaterials": []
           }
         ]
       }
