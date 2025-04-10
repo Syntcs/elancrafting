@@ -350,6 +350,93 @@
             ]
           }
         ]
+      },
+      "ammunation_base": {
+        "name": "Ammunition",
+        "items": [
+          {
+            "id": "ammo",
+            "title": "Ammo",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Ammo",
+                "quantity": 1,
+                "materials": [
+                  {
+                    "name": "Iron ingot",
+                    "quantity": 1
+                  },
+                  {
+                    "name": "Charcoal",
+                    "quantity": 1
+                  }
+                ]
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Iron ingot",
+                "quantity": 1
+              },
+              {
+                "name": "Charcoal",
+                "quantity": 1
+              }
+            ]
+          },
+          {
+            "id": "ammo-hq",
+            "title": "Ammo (HQ)",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Ammo (HQ)",
+                "quantity": 1,
+                "materials": [
+                  {
+                    "name": "Ammo",
+                    "quantity": 3
+                  },
+                  {
+                    "name": "Canister (petrol)",
+                    "quantity": 1
+                  }
+                ],
+                "subMaterials": {
+                  "Ammo": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 3
+                    },
+                    {
+                      "name": "Charcoal",
+                      "quantity": 3
+                    }
+                  ]
+                }
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Ammo",
+                "quantity": 3
+              },
+              {
+                "name": "Canister (petrol)",
+                "quantity": 1
+              },
+              {
+                "name": "Iron ingot",
+                "quantity": 3
+              },
+              {
+                "name": "Charcoal",
+                "quantity": 3
+              }
+            ]
+          }
+        ]
       }
     }
   },
