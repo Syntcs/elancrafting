@@ -320,11 +320,11 @@
                   "Rotor": [
                     {
                       "name": "Charcoal",
-                      "quantity": 18
+                      "quantity": 9
                     },
                     {
                       "name": "Polyester",
-                      "quantity": 18
+                      "quantity": 9
                     }
                   ]
                 }
@@ -341,11 +341,11 @@
               },
               {
                 "name": "Charcoal",
-                "quantity": 18
+                "quantity": 9
               },
               {
                 "name": "Polyester",
-                "quantity": 18
+                "quantity": 9
               }
             ]
           }
