@@ -1016,7 +1016,7 @@
         "items": [
           {
             "id": "ural-device",
-            "title": "Ural Device",
+            "title": "Ural-4320 Transport Truck - Device",
             "quantity": 1,
             "items": [
               {
@@ -1108,16 +1108,16 @@
             ],
             "totalMaterials": [
               {
+                "name": "Gold ingot",
+                "quantity": 1305
+              },
+              {
                 "name": "Iron ingot",
-                "quantity": 522
+                "quantity": 684
               },
               {
                 "name": "Copper ingot",
-                "quantity": 1098
-              },
-              {
-                "name": "Gold ingot",
-                "quantity": 1305
+                "quantity": 1233
               },
               {
                 "name": "Wooden planks",
