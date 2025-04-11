@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ELAN Server - Arma Reforger Crafting System</title>
+  <title>Team ELAN - Crafting Recipes</title>
   <style>
     :root {
       --bg-dark: #18181b;
@@ -530,7 +530,7 @@
             <line x1="3" y1="18" x2="21" y2="18"></line>
           </svg>
         </button>
-        <h1>ELAN Server - Arma Reforger Crafting System</h1>
+        <h1>Team ELAN - Crafting Recipes</h1>
       </div>
       <div class="search-container">
         <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -594,6 +594,8 @@
           <h2>Welcome to Arma Reforger Crafting System</h2>
           <p>Select an item from the sidebar to view crafting details.</p>
           <p>You can also search for items using the search bar above.</p>
+          <p style="margin-top: 1rem;">If you encounter any issues or have feedback, please contact:</p>
+          <p><strong>Discord:</strong> <a href="https://discord.com/channels/@me/1118498993895391232/" style="color: var(--text-light);" target="_blank">syntcs</a></p>
         </div>
       </div>
 
@@ -730,6 +732,9 @@
         
         // Initialize UI
         updateUI();
+        
+        // Make sure favorites are properly loaded after data is available
+        updateFavoritesList();
       } catch (error) {
         console.error('Error loading crafting data:', error);
         loadingIndicatorEl.innerHTML = `
@@ -1286,6 +1291,9 @@
     function updateFavoritesList() {
       favoritesListEl.innerHTML = '';
       
+      // Always get the latest favorites from localStorage
+      favorites = JSON.parse(localStorage.getItem('armaReforgerFavorites')) || [];
+      
       if (favorites.length === 0) {
         favoritesListEl.innerHTML = '<div class="favorites-empty">No favorites yet</div>';
         return;
@@ -1293,6 +1301,11 @@
       
       const allItems = getAllItems();
       const favoriteItems = allItems.filter(item => favorites.includes(item.id));
+      
+      if (favoriteItems.length === 0) {
+        favoritesListEl.innerHTML = '<div class="favorites-empty">No favorites found</div>';
+        return;
+      }
       
       favoriteItems.forEach(item => {
         const itemEl = document.createElement('button');
@@ -1320,13 +1333,15 @@
     });
 
     // Toggle favorites category
-    document.querySelector('.favorites-category .category-button').addEventListener('click', () => {
-      favoritesListEl.classList.toggle('hidden');
-      const chevron = document.querySelector('.favorites-category .chevron-icon');
-      if (favoritesListEl.classList.contains('hidden')) {
-        chevron.innerHTML = '<polyline points="9 18 15 12 9 6"></polyline>';
+    document.querySelector('.favorites-category .category-button').addEventListener('click', function() {
+      // Use a simple toggle instead of manipulating classes directly
+      const isHidden = favoritesListEl.classList.contains('hidden');
+      if (isHidden) {
+        favoritesListEl.classList.remove('hidden');
+        this.querySelector('.chevron-icon').innerHTML = '<polyline points="6 9 12 15 18 9"></polyline>';
       } else {
-        chevron.innerHTML = '<polyline points="6 9 12 15 18 9"></polyline>';
+        favoritesListEl.classList.add('hidden');
+        this.querySelector('.chevron-icon').innerHTML = '<polyline points="9 18 15 12 9 6"></polyline>';
       }
     });
 
