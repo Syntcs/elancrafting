@@ -239,6 +239,7 @@
       display: flex;
       align-items: center;
       margin-bottom: 1rem;
+      justify-content: space-between; /* Add this to push elements to opposite sides */
     }
 
     .item-title {
@@ -586,7 +587,7 @@
     }
 
     .save-image-container {
-      margin-bottom: 1rem;
+      margin-bottom: 0; /* Remove bottom margin */
       display: flex;
       justify-content: flex-end;
     }
@@ -724,15 +725,15 @@
 
       <div id="item-display" class="hidden">
         <div class="item-header">
-          <h2 class="item-title" id="current-item-title"></h2>
-          <button id="favorite-button" class="favorite-button">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-            </svg>
-          </button>
-          <span class="item-path" id="current-item-path"></span>
-        </div>
-        <div class="save-image-container">
+          <div style="display: flex; align-items: center;">
+            <h2 class="item-title" id="current-item-title"></h2>
+            <button id="favorite-button" class="favorite-button">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+            </button>
+            <span class="item-path" id="current-item-path"></span>
+          </div>
           <button id="save-image-button" class="save-image-button">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -1174,42 +1175,39 @@
           // Update components table
           componentsTableEl.innerHTML = '';
 
-          // Check if any item has base materials
-          let hasBaseMaterials = false;
+          // Check if any item has submaterials
+          let hasSubMaterials = false;
           currentItem.items.forEach(item => {
-            const hasSubMaterials = item.subMaterials && Object.keys(item.subMaterials).length > 0;
-            if (hasSubMaterials) {
-              hasBaseMaterials = true;
+            const hasItemSubMaterials = item.subMaterials && Object.keys(item.subMaterials).length > 0;
+            if (hasItemSubMaterials) {
+              hasSubMaterials = true;
             }
           });
 
-          // Update table headers based on whether base materials exist
+          // Update table headers based on whether submaterials exist
           const tableHeaders = document.querySelector('.components-table thead tr');
-          tableHeaders.innerHTML = `
-            <th>Item</th>
+          tableHeaders.innerHTML = hasSubMaterials ? 
+            `<th>Item</th>
             <th class="text-center">Quantity</th>
             <th>Material</th>
             <th class="text-center">Quantity</th>
             <th>Material</th>
+            <th class="text-center">Quantity</th>` :
+            `<th>Item</th>
             <th class="text-center">Quantity</th>
-          `;
+            <th>Material</th>
+            <th class="text-center">Quantity</th>`;
 
           // Process each component
           for (let itemIndex = 0; itemIndex < currentItem.items.length; itemIndex++) {
             const item = currentItem.items[itemIndex];
-            
-            // Check if this item has submaterials
-            const hasSubMaterials = item.subMaterials && Object.keys(item.subMaterials).length > 0;
-            
-            // Create the first row with the primary component
-            const firstRow = document.createElement('tr');
             
             // First two columns are always the component name and quantity
             let firstRowHTML = `
               <td>${item.name}</td>
               <td class="text-center">${item.quantity}</td>
             `;
-            
+
             // Add the first material
             if (item.materials.length > 0) {
               firstRowHTML += `
@@ -1217,13 +1215,14 @@
                 <td class="text-center">${item.materials[0].quantity}</td>
               `;
               
-              // Check if this material has submaterials
-              if (hasSubMaterials && item.subMaterials[item.materials[0].name] && item.subMaterials[item.materials[0].name].length > 0) {
+              // Check if this material has submaterials and if we're showing submaterial columns
+              if (hasSubMaterials && item.subMaterials && item.subMaterials[item.materials[0].name] && item.subMaterials[item.materials[0].name].length > 0) {
                 firstRowHTML += `
                   <td class="${getMaterialColorClass(item.subMaterials[item.materials[0].name][0].name)}">${item.subMaterials[item.materials[0].name][0].name}</td>
                   <td class="text-center">${item.subMaterials[item.materials[0].name][0].quantity}</td>
                 `;
-              } else {
+              } else if (hasSubMaterials) {
+                // Only add empty cells if we're showing submaterial columns
                 firstRowHTML += `
                   <td></td>
                   <td></td>
@@ -1234,17 +1233,25 @@
                 <td></td>
                 <td></td>
               `;
+              
+              // Only add empty cells for submaterials if we're showing those columns
+              if (hasSubMaterials) {
+                firstRowHTML += `
+                  <td></td>
+                  <td></td>
+                `;
+              }
             }
             
             firstRow.innerHTML = firstRowHTML;
             componentsTableEl.appendChild(firstRow);
             
             // Add rows for additional submaterials of the first material
-            if (hasSubMaterials && item.materials.length > 0 && item.subMaterials[item.materials[0].name] && item.subMaterials[item.materials[0].name].length > 1) {
+            if (hasSubMaterials && item.materials.length > 0 && item.subMaterials && item.subMaterials[item.materials[0].name] && item.subMaterials[item.materials[0].name].length > 1) {
               for (let i = 1; i < item.subMaterials[item.materials[0].name].length; i++) {
                 const subMaterial = item.subMaterials[item.materials[0].name][i];
                 const subRow = document.createElement('tr');
-                let subRowHTML = `
+                subRow.innerHTML = `
                   <td></td>
                   <td></td>
                   <td></td>
@@ -1252,7 +1259,6 @@
                   <td class="${getMaterialColorClass(subMaterial.name)}">${subMaterial.name}</td>
                   <td class="text-center">${subMaterial.quantity}</td>
                 `;
-                subRow.innerHTML = subRowHTML;
                 componentsTableEl.appendChild(subRow);
               }
             }
@@ -1270,7 +1276,7 @@
               `;
               
               // Check if this material has submaterials
-              if (hasSubMaterials && item.subMaterials[material.name] && item.subMaterials[material.name].length > 0) {
+              if (hasSubMaterials && item.subMaterials && item.subMaterials[material.name] && item.subMaterials[material.name].length > 0) {
                 materialRowHTML += `
                   <td class="${getMaterialColorClass(item.subMaterials[material.name][0].name)}">${item.subMaterials[material.name][0].name}</td>
                   <td class="text-center">${item.subMaterials[material.name][0].quantity}</td>
@@ -1283,7 +1289,7 @@
                 for (let j = 1; j < item.subMaterials[material.name].length; j++) {
                   const subMaterial = item.subMaterials[material.name][j];
                   const subRow = document.createElement('tr');
-                  let subRowHTML = `
+                  subRow.innerHTML = `
                     <td></td>
                     <td></td>
                     <td></td>
@@ -1291,14 +1297,18 @@
                     <td class="${getMaterialColorClass(subMaterial.name)}">${subMaterial.name}</td>
                     <td class="text-center">${subMaterial.quantity}</td>
                   `;
-                  subRow.innerHTML = subRowHTML;
                   componentsTableEl.appendChild(subRow);
                 }
-              } else {
+              } else if (hasSubMaterials) {
+                // Only add empty cells if we're showing submaterial columns
                 materialRowHTML += `
                   <td></td>
                   <td></td>
                 `;
+                materialRow.innerHTML = materialRowHTML;
+                componentsTableEl.appendChild(materialRow);
+              } else {
+                // No submaterial columns to add
                 materialRow.innerHTML = materialRowHTML;
                 componentsTableEl.appendChild(materialRow);
               }
@@ -1307,7 +1317,8 @@
             // Add a separator row if this is not the last item
             if (itemIndex < currentItem.items.length - 1) {
               const separatorRow = document.createElement('tr');
-              separatorRow.innerHTML = `<td colspan="6" class="separator-row"></td>`;
+              const colSpan = hasSubMaterials ? 6 : 4;
+              separatorRow.innerHTML = `<td colspan="${colSpan}" class="separator-row"></td>`;
               componentsTableEl.appendChild(separatorRow);
             }
           }
