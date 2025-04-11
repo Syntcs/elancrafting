@@ -447,7 +447,7 @@
                 "quantity": 1
               },
               {
-                "name": "Cooper ingot",
+                "name": "Copper ingot",
                 "quantity": 1
               }
             ]
@@ -651,7 +651,200 @@
               },
               {
                 "name": "Silver ingot",
-                "quantity": 6
+                "quantity": 3
+              }
+            ]
+          }
+        ]
+      },
+      "clothing_base": {
+        "name": "Clothing",
+        "items": [
+          {
+            "id": "cloth",
+            "title": "Cloth",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Cloth",
+                "quantity": 1,
+                "materials": [
+                  {
+                    "name": "Fabric",
+                    "quantity": 1
+                  },
+                  {
+                    "name": "Polyester",
+                    "quantity": 1
+                  }
+                ]
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Fabric",
+                "quantity": 1
+              },
+              {
+                "name": "Polyester",
+                "quantity": 1
+              }
+            ]
+          },
+          {
+            "id": "iron-plate",
+            "title": "Iron plate",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Iron plate",
+                "quantity": 1,
+                "materials": [
+                  {
+                    "name": "Iron ingot",
+                    "quantity": 1
+                  },
+                  {
+                    "name": "Fabric",
+                    "quantity": 1
+                  },
+                  {
+                    "name": "Polyester",
+                    "quantity": 1
+                  }
+                ]
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Iron ingot",
+                "quantity": 1
+              },
+              {
+                "name": "Fabric",
+                "quantity": 1
+              },
+              {
+                "name": "Polyester",
+                "quantity": 1
+              }
+            ]
+          },
+          {
+            "id": "kevler",
+            "title": "Kevler",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Kevler",
+                "quantity": 1,
+                "materials": [
+                  {
+                    "name": "Iron plate",
+                    "quantity": 1
+                  },
+                  {
+                    "name": "Iron ingot",
+                    "quantity": 20
+                  }
+                ],
+                "subMaterials": {
+                  "Iron plate": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 1
+                    },
+                    {
+                      "name": "Fabric",
+                      "quantity": 1
+                    },
+                    {
+                      "name": "Polyester",
+                      "quantity": 1
+                    }
+                  ]
+                }
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Iron ingot",
+                "quantity": 21
+              },
+              {
+                "name": "Fabric",
+                "quantity": 1
+              },
+              {
+                "name": "Polyester",
+                "quantity": 1
+              }
+            ]
+          }
+        ]
+      },
+      "scopes_base": {
+        "name": "Scopes",
+        "items": [
+          {
+            "id": "component",
+            "title": "Component",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Component",
+                "quantity": 1,
+                "materials": [
+                  {
+                    "name": "Iron ingot",
+                    "quantity": 1
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "quantity": 1
+                  }
+                ]
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Iron ingot",
+                "quantity": 1
+              },
+              {
+                "name": "Copper ingot",
+                "quantity": 1
+              }
+            ]
+          },
+          {
+            "id": "tempered-glass",
+            "title": "Tempered glass",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Tempered glass",
+                "quantity": 1,
+                "materials": [
+                  {
+                    "name": "Glass",
+                    "quantity": 2
+                  },
+                  {
+                    "name": "Polyester",
+                    "quantity": 1
+                  }
+                ]
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Glass",
+                "quantity": 2
+              },
+              {
+                "name": "Polyester",
+                "quantity": 1
               }
             ]
           }
