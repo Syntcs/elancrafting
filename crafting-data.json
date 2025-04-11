@@ -70,10 +70,6 @@
             ],
             "totalMaterials": [
               {
-                "name": "Mechanical Component",
-                "quantity": 9
-              },
-              {
                 "name": "Gold ingot",
                 "quantity": 45
               },
@@ -168,10 +164,6 @@
             ],
             "totalMaterials": [
               {
-                "name": "Engine part",
-                "quantity": 9
-              },
-              {
                 "name": "Copper ingot",
                 "quantity": 54
               },
@@ -250,10 +242,6 @@
             ],
             "totalMaterials": [
               {
-                "name": "Interior part",
-                "quantity": 9
-              },
-              {
                 "name": "Wooden planks",
                 "quantity": 45
               },
@@ -331,10 +319,6 @@
               }
             ],
             "totalMaterials": [
-              {
-                "name": "Rotor",
-                "quantity": 9
-              },
               {
                 "name": "Silver ingot",
                 "quantity": 30
@@ -419,10 +403,6 @@
             ],
             "totalMaterials": [
               {
-                "name": "Ammo",
-                "quantity": 3
-              },
-              {
                 "name": "Canister (petrol)",
                 "quantity": 1
               },
@@ -433,6 +413,245 @@
               {
                 "name": "Charcoal",
                 "quantity": 3
+              }
+            ]
+          }
+        ]
+      },
+      "weapon_base": {
+        "name": "Weapon",
+        "items": [
+          {
+            "id": "weapon-part",
+            "title": "Weapon part",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Weapon part",
+                "quantity": 1,
+                "materials": [
+                  {
+                    "name": "Iron ingot",
+                    "quantity": 1
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "quantity": 1
+                  }
+                ]
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Iron ingot",
+                "quantity": 1
+              },
+              {
+                "name": "Cooper ingot",
+                "quantity": 1
+              }
+            ]
+          },
+          {
+            "id": "weapon-part-hq",
+            "title": "Weapon part (HQ)",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Weapon part (HQ)",
+                "quantity": 1,
+                "materials": [
+                  {
+                    "name": "Weapon part",
+                    "quantity": 3
+                  },
+                  {
+                    "name": "Iron ingot",
+                    "quantity": 15
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "quantity": 16
+                  }
+                ],
+                "subMaterials": {
+                  "Weapon part": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 3
+                    },
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 3
+                    }
+                  ]
+                }
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Iron ingot",
+                "quantity": 18
+              },
+              {
+                "name": "Copper ingot",
+                "quantity": 19
+              }
+            ]
+          },
+          {
+            "id": "stabilizer",
+            "title": "Stabilizer",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Stabilizer",
+                "quantity": 1,
+                "materials": [
+                  {
+                    "name": "Iron ingot",
+                    "quantity": 2
+                  },
+                  {
+                    "name": "Gold ingot",
+                    "quantity": 1
+                  }
+                ]
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Iron ingot",
+                "quantity": 2
+              },
+              {
+                "name": "Gold ingot",
+                "quantity": 1
+              }
+            ]
+          },
+          {
+            "id": "stabilizer-hq",
+            "title": "Stabilizer (HQ)",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Stabilizer (HQ)",
+                "quantity": 1,
+                "materials": [
+                  {
+                    "name": "Stabilizer",
+                    "quantity": 3
+                  },
+                  {
+                    "name": "Polyester",
+                    "quantity": 15
+                  }
+                ],
+                "subMaterials": {
+                  "Stabilizer": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 6
+                    },
+                    {
+                      "name": "Gold ingot",
+                      "quantity": 3
+                    }
+                  ]
+                }
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Polyester",
+                "quantity": 15
+              },
+              {
+                "name": "Iron ingot",
+                "quantity": 6
+              },
+              {
+                "name": "Gold ingot",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "id": "attachment-part",
+            "title": "Attachment Part",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Attachment part",
+                "quantity": 1,
+                "materials": [
+                  {
+                    "name": "Copper ingot",
+                    "quantity": 2
+                  },
+                  {
+                    "name": "Silver ingot",
+                    "quantity": 1
+                  }
+                ]
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Copper ingot",
+                "quantity": 2
+              },
+              {
+                "name": "Silver ingot",
+                "quantity": 1
+              }
+            ]
+          },
+          {
+            "id": "attachment-part-hq",
+            "title": "Attachment part (HQ)",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Attachment part (HQ)",
+                "quantity": 1,
+                "materials": [
+                  {
+                    "name": "Attachment part",
+                    "quantity": 3
+                  },
+                  {
+                    "name": "Wooden planks",
+                    "quantity": 15
+                  }
+                ],
+                "subMaterials": {
+                  "Attachment part": [
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 6
+                    },
+                    {
+                      "name": "Silver ingot",
+                      "quantity": 3
+                    }
+                  ]
+                }
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Wooden planks",
+                "quantity": 15
+              },
+              {
+                "name": "Copper ingot",
+                "quantity": 6
+              },
+              {
+                "name": "Silver ingot",
+                "quantity": 6
               }
             ]
           }
