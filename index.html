@@ -1202,6 +1202,9 @@
           for (let itemIndex = 0; itemIndex < currentItem.items.length; itemIndex++) {
             const item = currentItem.items[itemIndex];
             
+            // Create the first row element
+            const firstRow = document.createElement('tr');
+
             // First two columns are always the component name and quantity
             let firstRowHTML = `
               <td>${item.name}</td>
@@ -1479,10 +1482,15 @@
       const saveImageButtonEl = document.getElementById('save-image-button');
       if (!saveImageButtonEl) return;
       
-      saveImageButtonEl.addEventListener('click', async () => {
+      // Remove any existing event listeners by cloning the button
+      const newButton = saveImageButtonEl.cloneNode(true);
+      saveImageButtonEl.parentNode.replaceChild(newButton, saveImageButtonEl);
+      
+      // Add the event listener to the new button
+      newButton.addEventListener('click', async () => {
         // Show loading state
-        saveImageButtonEl.disabled = true;
-        saveImageButtonEl.innerHTML = `
+        newButton.disabled = true;
+        newButton.innerHTML = `
           <div class="loading-spinner" style="width: 16px; height: 16px;"></div>
           Generating image...
         `;
@@ -1533,8 +1541,8 @@
           alert('Failed to generate image. Please try again.');
         } finally {
           // Reset button state
-          saveImageButtonEl.disabled = false;
-          saveImageButtonEl.innerHTML = `
+          newButton.disabled = false;
+          newButton.innerHTML = `
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="7 10 12 15 17 10"></polyline>
