@@ -584,6 +584,42 @@
     .disclaimer-card a:hover {
       text-decoration: underline;
     }
+
+    .save-image-container {
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .save-image-button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background-color: var(--bg-medium);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      border-radius: 0.25rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .save-image-button:hover {
+      background-color: var(--bg-light);
+    }
+
+    .save-image-button svg {
+      stroke: currentColor;
+    }
+
+    .website-url {
+      text-align: center;
+      padding: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--text-dim);
+      border-top: 1px solid var(--border-color);
+      margin-top: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -695,6 +731,16 @@
             </svg>
           </button>
           <span class="item-path" id="current-item-path"></span>
+        </div>
+        <div class="save-image-container">
+          <button id="save-image-button" class="save-image-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Save as Image
+          </button>
         </div>
         <div class="crafting-table">
           <div class="crafting-table-header">
@@ -1144,7 +1190,8 @@
             <th class="text-center">Quantity</th>
             <th>Material</th>
             <th class="text-center">Quantity</th>
-            ${hasBaseMaterials ? '<th>Material</th><th class="text-center">Quantity</th>' : ''}
+            <th>Material</th>
+            <th class="text-center">Quantity</th>
           `;
 
           // Process each component
@@ -1172,13 +1219,11 @@
               
               // Check if this material has submaterials
               if (hasSubMaterials && item.subMaterials[item.materials[0].name] && item.subMaterials[item.materials[0].name].length > 0) {
-                if (hasBaseMaterials) {
-                  firstRowHTML += `
-                    <td class="${getMaterialColorClass(item.subMaterials[item.materials[0].name][0].name)}">${item.subMaterials[item.materials[0].name][0].name}</td>
-                    <td class="text-center">${item.subMaterials[item.materials[0].name][0].quantity}</td>
-                  `;
-                }
-              } else if (hasBaseMaterials) {
+                firstRowHTML += `
+                  <td class="${getMaterialColorClass(item.subMaterials[item.materials[0].name][0].name)}">${item.subMaterials[item.materials[0].name][0].name}</td>
+                  <td class="text-center">${item.subMaterials[item.materials[0].name][0].quantity}</td>
+                `;
+              } else {
                 firstRowHTML += `
                   <td></td>
                   <td></td>
@@ -1189,12 +1234,6 @@
                 <td></td>
                 <td></td>
               `;
-              if (hasBaseMaterials) {
-                firstRowHTML += `
-                  <td></td>
-                  <td></td>
-                `;
-              }
             }
             
             firstRow.innerHTML = firstRowHTML;
@@ -1210,15 +1249,9 @@
                   <td></td>
                   <td></td>
                   <td></td>
+                  <td class="${getMaterialColorClass(subMaterial.name)}">${subMaterial.name}</td>
+                  <td class="text-center">${subMaterial.quantity}</td>
                 `;
-                
-                if (hasBaseMaterials) {
-                  subRowHTML += `
-                    <td class="${getMaterialColorClass(subMaterial.name)}">${subMaterial.name}</td>
-                    <td class="text-center">${subMaterial.quantity}</td>
-                  `;
-                }
-                
                 subRow.innerHTML = subRowHTML;
                 componentsTableEl.appendChild(subRow);
               }
@@ -1238,12 +1271,10 @@
               
               // Check if this material has submaterials
               if (hasSubMaterials && item.subMaterials[material.name] && item.subMaterials[material.name].length > 0) {
-                if (hasBaseMaterials) {
-                  materialRowHTML += `
-                    <td class="${getMaterialColorClass(item.subMaterials[material.name][0].name)}">${item.subMaterials[material.name][0].name}</td>
-                    <td class="text-center">${item.subMaterials[material.name][0].quantity}</td>
-                  `;
-                }
+                materialRowHTML += `
+                  <td class="${getMaterialColorClass(item.subMaterials[material.name][0].name)}">${item.subMaterials[material.name][0].name}</td>
+                  <td class="text-center">${item.subMaterials[material.name][0].quantity}</td>
+                `;
                 
                 materialRow.innerHTML = materialRowHTML;
                 componentsTableEl.appendChild(materialRow);
@@ -1257,26 +1288,17 @@
                     <td></td>
                     <td></td>
                     <td></td>
+                    <td class="${getMaterialColorClass(subMaterial.name)}">${subMaterial.name}</td>
+                    <td class="text-center">${subMaterial.quantity}</td>
                   `;
-                  
-                  if (hasBaseMaterials) {
-                    subRowHTML += `
-                      <td class="${getMaterialColorClass(subMaterial.name)}">${subMaterial.name}</td>
-                      <td class="text-center">${subMaterial.quantity}</td>
-                    `;
-                  }
-                  
                   subRow.innerHTML = subRowHTML;
                   componentsTableEl.appendChild(subRow);
                 }
               } else {
-                if (hasBaseMaterials) {
-                  materialRowHTML += `
-                    <td></td>
-                    <td></td>
-                  `;
-                }
-                
+                materialRowHTML += `
+                  <td></td>
+                  <td></td>
+                `;
                 materialRow.innerHTML = materialRowHTML;
                 componentsTableEl.appendChild(materialRow);
               }
@@ -1285,8 +1307,7 @@
             // Add a separator row if this is not the last item
             if (itemIndex < currentItem.items.length - 1) {
               const separatorRow = document.createElement('tr');
-              let separatorHTML = `<td colspan="${hasBaseMaterials ? 6 : 4}" style="height: 10px; background-color: var(--bg-medium);"></td>`;
-              separatorRow.innerHTML = separatorHTML;
+              separatorRow.innerHTML = `<td colspan="6" class="separator-row"></td>`;
               componentsTableEl.appendChild(separatorRow);
             }
           }
@@ -1442,8 +1463,88 @@
     // Initialize favorites list
     updateFavoritesList();
 
+    // Save as Image functionality
+    function setupSaveImageButton() {
+      const saveImageButtonEl = document.getElementById('save-image-button');
+      if (!saveImageButtonEl) return;
+      
+      saveImageButtonEl.addEventListener('click', async () => {
+        // Show loading state
+        saveImageButtonEl.disabled = true;
+        saveImageButtonEl.innerHTML = `
+          <div class="loading-spinner" style="width: 16px; height: 16px;"></div>
+          Generating image...
+        `;
+        
+        try {
+          // Get the crafting table element
+          const craftingTableEl = document.querySelector('.crafting-table');
+          
+          // Create a clone of the element to modify for the image
+          const clonedEl = craftingTableEl.cloneNode(true);
+          
+          // Add website URL to the bottom
+          const websiteUrlEl = document.createElement('div');
+          websiteUrlEl.className = 'website-url';
+          websiteUrlEl.textContent = 'syntcs.com/elancrafting';
+          clonedEl.appendChild(websiteUrlEl);
+          
+          // Temporarily add the cloned element to the document but hide it
+          clonedEl.style.position = 'absolute';
+          clonedEl.style.left = '-9999px';
+          document.body.appendChild(clonedEl);
+          
+          // Use html2canvas to create an image
+          const canvas = await html2canvas(clonedEl, {
+            backgroundColor: '#18181b', // Match the dark background
+            scale: 2, // Higher quality
+            logging: false,
+            useCORS: true // Allow images from other domains
+          });
+          
+          // Remove the cloned element
+          document.body.removeChild(clonedEl);
+          
+          // Convert canvas to a data URL
+          const imageData = canvas.toDataURL('image/png');
+          
+          // Create a download link
+          const downloadLink = document.createElement('a');
+          downloadLink.href = imageData;
+          downloadLink.download = `${document.getElementById('current-item-title').textContent.replace(/\s+/g, '_')}_recipe.png`;
+          
+          // Trigger the download
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+          document.body.removeChild(downloadLink);
+        } catch (error) {
+          console.error('Error generating image:', error);
+          alert('Failed to generate image. Please try again.');
+        } finally {
+          // Reset button state
+          saveImageButtonEl.disabled = false;
+          saveImageButtonEl.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Save as Image
+          `;
+        }
+      });
+    }
+
+    // Call setupSaveImageButton when UI is updated
+    const originalUpdateUI2 = updateUI;
+    updateUI = function() {
+      originalUpdateUI2();
+      setupSaveImageButton();
+    };
+
     // Load data and initialize the UI
     loadCraftingData();
   </script>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </body>
 </html>
