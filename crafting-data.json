@@ -859,6 +859,81 @@
         "name": "Assault Rifles",
         "items": [
           {
+            "id": "m16a2",
+            "title": "M16A2",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "M16A2",
+                "quantity": 1,
+                "materials": [
+                  {
+                    "name": "Weapon part",
+                    "quantity": 27
+                  },
+                  {
+                    "name": "Stabilizer",
+                    "quantity": 15
+                  },
+                  {
+                    "name": "Attachment part",
+                    "quantity": 17
+                  }
+                ],
+                "subMaterials": {
+                  "Weapon part": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 27
+                    },
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 27
+                    }
+                  ],
+                  "Stabilizer": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 30
+                    },
+                    {
+                      "name": "Gold ingot",
+                      "quantity": 15
+                    }
+                  ],
+                  "Attachment part": [
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 34
+                    },
+                    {
+                      "name": "Silver ingot",
+                      "quantity": 17
+                    }
+                  ]
+                }
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Iron ingot",
+                "quantity": 57
+              },
+              {
+                "name": "Copper ingot",
+                "quantity": 61
+              },
+              {
+                "name": "Gold ingot",
+                "quantity": 15
+              },
+              {
+                "name": "Silver ingot",
+                "quantity": 17
+              }
+            ]
+          },
+          {
             "id": "sig-mcx",
             "title": "SIG MCX",
             "quantity": 1,
@@ -1137,7 +1212,179 @@
                 }
               }
             ],
-            "totalMaterials": []
+            "totalMaterials": [
+              {
+                "name": "Iron ingot",
+                "quantity": 11
+              },
+              {
+                "name": "Copper ingot",
+                "quantity": 11
+              },
+              {
+                "name": "Gold ingot",
+                "quantity": 3
+              },
+              {
+                "name": "Silver ingot",
+                "quantity": 3
+              }
+            ]
+          }
+        ]
+      },
+      "submachine_gun": {
+        "name": "submachine gun",
+        "items": [
+          {
+            "id": "mp5a2",
+            "title": "MP5A2",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "MP5A2",
+                "quantity": 1,
+                "materials": [
+                  {
+                    "name": "Weapon part",
+                    "quantity": 11
+                  },
+                  {
+                    "name": "Stabilizer",
+                    "quantity": 6
+                  },
+                  {
+                    "name": "Attachment part",
+                    "quantity": 7
+                  }
+                ],
+                "subMaterials": {
+                  "Weapon part": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 11
+                    },
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 11
+                    }
+                  ],
+                  "Stabilizer": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 12
+                    },
+                    {
+                      "name": "Gold ingot",
+                      "quantity": 6
+                    }
+                  ],
+                  "Attachment part": [
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 14
+                    },
+                    {
+                      "name": "Silver ingot",
+                      "quantity": 7
+                    }
+                  ]
+                }
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Iron ingot",
+                "quantity": 23
+              },
+              {
+                "name": "Copper ingot",
+                "quantity": 25
+              },
+              {
+                "name": "Gold ingot",
+                "quantity": 6
+              },
+              {
+                "name": "Silver ingot",
+                "quantity": 7
+              }
+            ]
+          },
+          {
+            "id": "mp7a2",
+            "title": "MP7A2",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "MP7A2",
+                "quantity": 1,
+                "materials": [
+                  {
+                    "name": "Weapon part",
+                    "quantity": 15
+                  },
+                  {
+                    "name": "Stabilizer",
+                    "quantity": 8
+                  },
+                  {
+                    "name": "Attachment part",
+                    "quantity": 9
+                  }
+                ],
+                "subMaterials": {
+                  "Weapon part": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 15
+                    },
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 15
+                    }
+                  ],
+                  "Stabilizer": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 16
+                    },
+                    {
+                      "name": "Gold ingot",
+                      "quantity": 8
+                    }
+                  ],
+                  "Attachment part": [
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 18
+                    },
+                    {
+                      "name": "Silver ingot",
+                      "quantity": 9
+                    }
+                  ]
+                }
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Iron ingot",
+                "quantity": 31
+              },
+              {
+                "name": "Copper ingot",
+                "quantity": 33
+              },
+              {
+                "name": "Gold ingot",
+                "quantity": 8
+              },
+              {
+                "name": "Silver ingot",
+                "quantity": 9
+              }
+            ]
           }
         ]
       }
