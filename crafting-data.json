@@ -2065,6 +2065,121 @@
                 "quantity": 9
               }
             ]
+          },
+          {
+            "id": "scar-h",
+            "title": "Scar-H",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Weapon part (HQ)",
+                "quantity": 4,
+                "materials": [
+                  {
+                    "name": "Weapon part",
+                    "quantity": 12
+                  },
+                  {
+                    "name": "Iron ingot",
+                    "quantity": 60
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "quantity": 64
+                  }
+                ],
+                "subMaterials": {
+                  "Weapon part": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 12
+                    },
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 12
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "Stabilizer (HQ)",
+                "quantity": 4,
+                "materials": [
+                  {
+                    "name": "Stabilizer",
+                    "quantity": 12
+                  },
+                  {
+                    "name": "Polyester",
+                    "quantity": 60
+                  }
+                ],
+                "subMaterials": {
+                  "Stabilizer": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 24
+                    },
+                    {
+                      "name": "Gold ingot",
+                      "quantity": 12
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "Attachment part (HQ)",
+                "quantity": 5,
+                "materials": [
+                  {
+                    "name": "Attachment part",
+                    "quantity": 15
+                  },
+                  {
+                    "name": "Wooden planks",
+                    "quantity": 75
+                  }
+                ],
+                "subMaterials": {
+                  "Attachment part": [
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 30
+                    },
+                    {
+                      "name": "Silver ingot",
+                      "quantity": 15
+                    }
+                  ]
+                }
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Iron ingot",
+                "quantity": 96
+              },
+              {
+                "name": "Copper ingot",
+                "quantity": 106
+              },
+              {
+                "name": "Polyester",
+                "quantity": 60
+              },
+              {
+                "name": "Gold ingot",
+                "quantity": 12
+              },
+              {
+                "name": "Wooden planks",
+                "quantity": 75
+              },
+              {
+                "name": "Silver ingot",
+                "quantity": 15
+              }
+            ]
           }
         ]
       },
@@ -2135,6 +2250,121 @@
               {
                 "name": "Silver ingot",
                 "quantity": 24
+              }
+            ]
+          },
+          {
+            "id": "sr25",
+            "title": "SR25",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Weapon part (HQ)",
+                "quantity": 3,
+                "materials": [
+                  {
+                    "name": "Weapon part",
+                    "quantity": 9
+                  },
+                  {
+                    "name": "Iron ingot",
+                    "quantity": 45
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "quantity": 48
+                  }
+                ],
+                "subMaterials": {
+                  "Weapon part": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 9
+                    },
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 9
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "Stabilizer (HQ)",
+                "quantity": 3,
+                "materials": [
+                  {
+                    "name": "Stabilizer",
+                    "quantity": 9
+                  },
+                  {
+                    "name": "Polyester",
+                    "quantity": 45
+                  }
+                ],
+                "subMaterials": {
+                  "Stabilizer": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 18
+                    },
+                    {
+                      "name": "Gold ingot",
+                      "quantity": 9
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "Attachment (HQ)",
+                "quantity": 4,
+                "materials": [
+                  {
+                    "name": "Attachment",
+                    "quantity": 12
+                  },
+                  {
+                    "name": "Wooden planks",
+                    "quantity": 60
+                  }
+                ],
+                "subMaterials": {
+                  "Attachment": [
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 24
+                    },
+                    {
+                      "name": "Silver ingot",
+                      "quantity": 12
+                    }
+                  ]
+                }
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Iron ingot",
+                "quantity": 72
+              },
+              {
+                "name": "Copper ingot",
+                "quantity": 81
+              },
+              {
+                "name": "Polyester",
+                "quantity": 45
+              },
+              {
+                "name": "Gold ingot",
+                "quantity": 9
+              },
+              {
+                "name": "Wooden planks",
+                "quantity": 60
+              },
+              {
+                "name": "Silver ingot",
+                "quantity": 12
               }
             ]
           }
@@ -2375,6 +2605,135 @@
               {
                 "name": "Silver ingot",
                 "quantity": 9
+              }
+            ]
+          },
+          {
+            "id": "cheytav-m200-intervention",
+            "title": "CheyTac M200 Intervention",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Weapon part (HQ)",
+                "quantity": 8,
+                "materials": [
+                  {
+                    "name": "Weapon part",
+                    "quantity": 24
+                  },
+                  {
+                    "name": "Iron ingot",
+                    "quantity": 120
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "quantity": 128
+                  }
+                ],
+                "subMaterials": {
+                  "Weapon part": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 24
+                    },
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 24
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "Stabilizer (HQ)",
+                "quantity": 8,
+                "materials": [
+                  {
+                    "name": "Stabilizer",
+                    "quantity": 24
+                  },
+                  {
+                    "name": "Polyester",
+                    "quantity": 120
+                  }
+                ],
+                "subMaterials": {
+                  "Stabilizer": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 48
+                    },
+                    {
+                      "name": "Gold ingot",
+                      "quantity": 24
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "Attachment part (HQ)",
+                "quantity": 10,
+                "materials": [
+                  {
+                    "name": "Attachment part",
+                    "quantity": 30
+                  },
+                  {
+                    "name": "Wooden planks",
+                    "quantity": 150
+                  }
+                ],
+                "subMaterials": {
+                  "Attachment part": [
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 20
+                    },
+                    {
+                      "name": "Silver ingot",
+                      "quantity": 10
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "Special gun Barrel",
+                "quantity": 1,
+                "materials": [
+                  {
+                    "name": "luck",
+                    "quantity": 0
+                  }
+                ]
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Iron ingot",
+                "quantity": 192
+              },
+              {
+                "name": "Copper ingot",
+                "quantity": 172
+              },
+              {
+                "name": "Polyester",
+                "quantity": 120
+              },
+              {
+                "name": "Gold ingot",
+                "quantity": 24
+              },
+              {
+                "name": "Wooden planks",
+                "quantity": 150
+              },
+              {
+                "name": "Silver ingot",
+                "quantity": 10
+              },
+              {
+                "name": "Special gun Barrel",
+                "quantity": 1
               }
             ]
           }
