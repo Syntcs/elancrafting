@@ -1405,6 +1405,140 @@
             ]
           },
           {
+            "id": "steyr-aug",
+            "title": "Steyr AUG",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Weapon part",
+                "quantity": 51,
+                "materials": [
+                  {
+                    "name": "Iron ingot",
+                    "quantity": 51
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "quantity": 51
+                  }
+                ]
+              },
+              {
+                "name": "Stabilizer",
+                "quantity": 28,
+                "materials": [
+                  {
+                    "name": "Iron ingot",
+                    "quantity": 56
+                  },
+                  {
+                    "name": "Gold ingot",
+                    "quantity": 28
+                  }
+                ]
+              },
+              {
+                "name": "Attachment part",
+                "quantity": 31,
+                "materials": [
+                  {
+                    "name": "Copper ingot",
+                    "quantity": 62
+                  },
+                  {
+                    "name": "Silver ingot",
+                    "quantity": 31
+                  }
+                ]
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Iron ingot",
+                "quantity": 107
+              },
+              {
+                "name": "Copper ingot",
+                "quantity": 113
+              },
+              {
+                "name": "Gold ingot",
+                "quantity": 28
+              },
+              {
+                "name": "Silver ingot",
+                "quantity": 31
+              }
+            ]
+          },
+          {
+            "id": "m416",
+            "title": "M416",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Weapon part",
+                "quantity": 43,
+                "materials": [
+                  {
+                    "name": "Iron ingot",
+                    "quantity": 43
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "quantity": 43
+                  }
+                ]
+              },
+              {
+                "name": "Stabilizer",
+                "quantity": 23,
+                "materials": [
+                  {
+                    "name": "Iron ingot",
+                    "quantity": 46
+                  },
+                  {
+                    "name": "Gold ingot",
+                    "quantity": 23
+                  }
+                ]
+              },
+              {
+                "name": "Attachment part",
+                "quantity": 26,
+                "materials": [
+                  {
+                    "name": "Copper ingot",
+                    "quantity": 52
+                  },
+                  {
+                    "name": "Silver ingot",
+                    "quantity": 26
+                  }
+                ]
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Iron ingot",
+                "quantity": 89
+              },
+              {
+                "name": "Copper ingot",
+                "quantity": 95
+              },
+              {
+                "name": "Gold ingot",
+                "quantity": 23
+              },
+              {
+                "name": "Silver ingot",
+                "quantity": 26
+              }
+            ]
+          },
+          {
             "id": "sig-mcx",
             "title": "SIG MCX",
             "quantity": 1,
@@ -1473,69 +1607,117 @@
             "imageUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png"
           },
           {
-            "id": "steyr-aug",
-            "title": "Steyr AUG",
+            "id": "ak-47",
+            "title": "AK-47",
             "quantity": 1,
             "items": [
               {
-                "name": "Weapon part",
-                "quantity": 51,
+                "name": "Weapon part (HQ)",
+                "quantity": 3,
                 "materials": [
                   {
+                    "name": "Weapon part",
+                    "quantity": 9
+                  },
+                  {
                     "name": "Iron ingot",
-                    "quantity": 51
+                    "quantity": 45
                   },
                   {
                     "name": "Copper ingot",
-                    "quantity": 51
+                    "quantity": 48
                   }
-                ]
+                ],
+                "subMaterials": {
+                  "Weapon part": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 9
+                    },
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 9
+                    }
+                  ]
+                }
               },
               {
-                "name": "Stabilizer",
-                "quantity": 28,
+                "name": "Stabilizer (HQ)",
+                "quantity": 3,
                 "materials": [
                   {
-                    "name": "Iron ingot",
-                    "quantity": 56
+                    "name": "Stabilizer",
+                    "quantity": 9
                   },
                   {
-                    "name": "Gold ingot",
-                    "quantity": 28
+                    "name": "Polyester",
+                    "quantity": 45
                   }
-                ]
+                ],
+                "subMaterials": {
+                  "Stabilizer": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 18
+                    },
+                    {
+                      "name": "Gold ingot",
+                      "quantity": 9
+                    }
+                  ]
+                }
               },
               {
-                "name": "Attachment part",
-                "quantity": 31,
+                "name": "Attachment part (HQ)",
+                "quantity": 3,
                 "materials": [
                   {
-                    "name": "Copper ingot",
-                    "quantity": 62
+                    "name": "Attachment part",
+                    "quantity": 9
                   },
                   {
-                    "name": "Silver ingot",
-                    "quantity": 31
+                    "name": "Wooden planks",
+                    "quantity": 45
                   }
-                ]
+                ],
+                "subMaterials": {
+                  "Attachment part": [
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 18
+                    },
+                    {
+                      "name": "Silver ingot",
+                      "quantity": 9
+                    }
+                  ]
+                }
               }
             ],
             "totalMaterials": [
               {
                 "name": "Iron ingot",
-                "quantity": 107
+                "quantity": 72
               },
               {
                 "name": "Copper ingot",
-                "quantity": 113
+                "quantity": 75
+              },
+              {
+                "name": "Polyester",
+                "quantity": 45
               },
               {
                 "name": "Gold ingot",
-                "quantity": 28
+                "quantity": 9
+              },
+              {
+                "name": "Wooden planks",
+                "quantity": 45
               },
               {
                 "name": "Silver ingot",
-                "quantity": 31
+                "quantity": 9
               }
             ]
           }
@@ -1615,7 +1797,123 @@
       },
       "shotgun": {
         "name": "Shotgun",
-        "items": []
+        "items": [
+          {
+            "id": "mp-43-1c",
+            "title": "MP 43 1C",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Weapon part (HQ)",
+                "quantity": 2,
+                "materials": [
+                  {
+                    "name": "Weapon part",
+                    "quantity": 6
+                  },
+                  {
+                    "name": "Iron ingot",
+                    "quantity": 30
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "quantity": 32
+                  }
+                ],
+                "subMaterials": {
+                  "Weapon part": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 6
+                    },
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 6
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "Stabilizer (HQ)",
+                "quantity": 2,
+                "materials": [
+                  {
+                    "name": "Stabilizer",
+                    "quantity": 6
+                  },
+                  {
+                    "name": "Polyester",
+                    "quantity": 30
+                  }
+                ],
+                "subMaterials": {
+                  "Stabilizer": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 12
+                    },
+                    {
+                      "name": "Gold ingot",
+                      "quantity": 6
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "Attachment part (HQ)",
+                "quantity": 2,
+                "materials": [
+                  {
+                    "name": "Attachment part",
+                    "quantity": 1
+                  },
+                  {
+                    "name": "Wooden planks",
+                    "quantity": 30
+                  }
+                ],
+                "subMaterials": {
+                  "Attachment part": [
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 12
+                    },
+                    {
+                      "name": "Silver ingot",
+                      "quantity": 6
+                    }
+                  ]
+                }
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Iron ingot",
+                "quantity": 48
+              },
+              {
+                "name": "Copper ingot",
+                "quantity": 50
+              },
+              {
+                "name": "Polyester",
+                "quantity": 30
+              },
+              {
+                "name": "Gold ingot",
+                "quantity": 6
+              },
+              {
+                "name": "Wooden planks",
+                "quantity": 30
+              },
+              {
+                "name": "Silver ingot",
+                "quantity": 6
+              }
+            ]
+          }
+        ]
       }
     }
   },
