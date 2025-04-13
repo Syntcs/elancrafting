@@ -927,6 +927,219 @@
             "imageUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png"
           }
         ]
+      },
+      "pistol": {
+        "name": "Pistol",
+        "items": [
+          {
+            "id": "pm",
+            "title": "PM",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "PM",
+                "quantity": 1,
+                "materials": [
+                  {
+                    "name": "Weapon part",
+                    "quantity": 4
+                  },
+                  {
+                    "name": "Stabilizer",
+                    "quantity": 2
+                  },
+                  {
+                    "name": "Attachment Part",
+                    "quantity": 2
+                  }
+                ],
+                "subMaterials": {
+                  "Weapon part": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 4
+                    },
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 4
+                    }
+                  ],
+                  "Stabilizer": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 4
+                    },
+                    {
+                      "name": "Gold ingot",
+                      "quantity": 2
+                    }
+                  ],
+                  "Attachment Part": [
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 4
+                    },
+                    {
+                      "name": "Silver ingot",
+                      "quantity": 2
+                    }
+                  ]
+                }
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Iron ingot",
+                "quantity": 8
+              },
+              {
+                "name": "Copper ingot",
+                "quantity": 8
+              },
+              {
+                "name": "Gold ingot",
+                "quantity": 2
+              },
+              {
+                "name": "Silver ingot",
+                "quantity": 2
+              }
+            ]
+          },
+          {
+            "id": "m9",
+            "title": "M9",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "M9",
+                "quantity": 1,
+                "materials": [
+                  {
+                    "name": "Weapon part",
+                    "quantity": 5
+                  },
+                  {
+                    "name": "Stabilizer",
+                    "quantity": 1
+                  },
+                  {
+                    "name": "Attachment Part",
+                    "quantity": 3
+                  }
+                ],
+                "subMaterials": {
+                  "Weapon part": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 5
+                    },
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 5
+                    }
+                  ],
+                  "Stabilizer": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 6
+                    },
+                    {
+                      "name": "Gold ingot",
+                      "quantity": 3
+                    }
+                  ],
+                  "Attachment Part": [
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 6
+                    },
+                    {
+                      "name": "Silver ingot",
+                      "quantity": 3
+                    }
+                  ]
+                }
+              }
+            ],
+            "totalMaterials": [
+              {
+                "name": "Iron ingot",
+                "quantity": 11
+              },
+              {
+                "name": "Copper ingot",
+                "quantity": 11
+              },
+              {
+                "name": "Gold ingot",
+                "quantity": 3
+              },
+              {
+                "name": "Silver ingot",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "id": "colt1911",
+            "title": "Colt 1911",
+            "quantity": 1,
+            "items": [
+              {
+                "name": "Colz 1911",
+                "quantity": 1,
+                "materials": [
+                  {
+                    "name": "Weapon part",
+                    "quantity": 5
+                  },
+                  {
+                    "name": "Stabilizer",
+                    "quantity": 3
+                  },
+                  {
+                    "name": "Attachment Part",
+                    "quantity": 3
+                  }
+                ],
+                "subMaterials": {
+                  "Weapon part": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 5
+                    },
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 5
+                    }
+                  ],
+                  "Stabilizer": [
+                    {
+                      "name": "Iron ingot",
+                      "quantity": 6
+                    },
+                    {
+                      "name": "Gold ingot",
+                      "quantity": 3
+                    }
+                  ],
+                  "Attachment Part": [
+                    {
+                      "name": "Copper ingot",
+                      "quantity": 6
+                    },
+                    {
+                      "name": "Silver ingot",
+                      "quantity": 3
+                    }
+                  ]
+                }
+              }
+            ],
+            "totalMaterials": []
+          }
+        ]
       }
     }
   },
