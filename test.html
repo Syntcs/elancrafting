@@ -23,6 +23,9 @@
       --polyester-color: #20B2AA;
       --wooden-color: #8B4513;
       --petrol-color: #32CD32;
+      /* Füge diese nach den anderen Material-Farben hinzu */
+      --special-gun-barrel-color: linear-gradient(to right, #ff4500, #ff8c00);
+      --special-rotor-color: linear-gradient(to right, #9932cc, #4b0082);
     }
 
     * {
@@ -359,11 +362,23 @@
     .wooden-color { color: var(--wooden-color); }
     .petrol-color { color: var(--petrol-color); }
 
-    /* New CSS for special items glow effect */
-    .special-item-glow {
-      color: #ff3333;
-      text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000;
+    /* Füge diese neuen CSS-Klassen hinzu (nach den anderen Material-Farben-Klassen): */
+    .special-gun-barrel-color { 
+      background: var(--special-gun-barrel-color);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
       font-weight: bold;
+      text-shadow: 0 0 5px rgba(255, 69, 0, 0.3);
+    }
+
+    .special-rotor-color { 
+      background: var(--special-rotor-color);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: bold;
+      text-shadow: 0 0 5px rgba(153, 50, 204, 0.3);
     }
 
     .hidden {
@@ -1363,6 +1378,8 @@
         case 'Polyester': return 'polyester-color';
         case 'Wooden planks': return 'wooden-color';
         case 'Canister (petrol)': return 'petrol-color';
+        case 'Special gun Barrel': return 'special-gun-barrel-color';
+        case 'Special rotor': return 'special-rotor-color';
         default: return '';
       }
     }
@@ -1566,58 +1583,6 @@
     updateUI = function() {
       originalUpdateUI2();
       setupSaveImageButton();
-    };
-
-    // Function to apply special item glow effect
-    function applySpecialItemGlow() {
-      // Apply to item titles in the main display
-      const itemTitle = document.getElementById('current-item-title');
-      if (itemTitle && (
-          itemTitle.textContent.includes('Special gun Barrel') || 
-          itemTitle.textContent.includes('Special rotor')
-      )) {
-        itemTitle.classList.add('special-item-glow');
-      }
-      
-      // Apply to items in components table
-      const componentCells = document.querySelectorAll('#components-table td:first-child');
-      componentCells.forEach(cell => {
-        if (
-          cell.textContent.includes('Special gun Barrel') || 
-          cell.textContent.includes('Special rotor')
-        ) {
-          cell.classList.add('special-item-glow');
-        }
-      });
-      
-      // Apply to search results
-      const searchResultTitles = document.querySelectorAll('.search-result-title');
-      searchResultTitles.forEach(title => {
-        if (
-          title.textContent.includes('Special gun Barrel') || 
-          title.textContent.includes('Special rotor')
-        ) {
-          title.classList.add('special-item-glow');
-        }
-      });
-      
-      // Apply to sidebar items
-      const sidebarItems = document.querySelectorAll('.item-button');
-      sidebarItems.forEach(item => {
-        if (
-          item.textContent.includes('Special gun Barrel') || 
-          item.textContent.includes('Special rotor')
-        ) {
-          item.classList.add('special-item-glow');
-        }
-      });
-    }
-
-    // Add the special item glow effect to the updateUI function
-    const originalUpdateUI3 = updateUI;
-    updateUI = function() {
-      originalUpdateUI3();
-      applySpecialItemGlow();
     };
 
     // Load data and initialize the UI
