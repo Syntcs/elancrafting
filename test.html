@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Team ELAN - Crafting Recipes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
   <style>
     :root {
       --bg-dark: #18181b;
@@ -23,9 +23,6 @@
       --polyester-color: #20B2AA;
       --wooden-color: #8B4513;
       --petrol-color: #32CD32;
-      /* Füge diese nach den anderen Material-Farben hinzu */
-      --special-gun-barrel-color: linear-gradient(to right, #ff4500, #ff8c00);
-      --special-rotor-color: linear-gradient(to right, #9932cc, #4b0082);
     }
 
     * {
@@ -344,12 +341,15 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      min-height: 150px; /* Add minimum height */
     }
 
     .preview-image {
       max-width: 100%;
       max-height: 150px;
       object-fit: contain;
+      display: block; /* Ensure block display */
+      margin: 0 auto; /* Center the image */
     }
 
     .iron-color { color: var(--iron-color); }
@@ -361,25 +361,6 @@
     .polyester-color { color: var(--polyester-color); }
     .wooden-color { color: var(--wooden-color); }
     .petrol-color { color: var(--petrol-color); }
-
-    /* Füge diese neuen CSS-Klassen hinzu (nach den anderen Material-Farben-Klassen): */
-    .special-gun-barrel-color { 
-      background: var(--special-gun-barrel-color);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      font-weight: bold;
-      text-shadow: 0 0 5px rgba(255, 69, 0, 0.3);
-    }
-
-    .special-rotor-color { 
-      background: var(--special-rotor-color);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      font-weight: bold;
-      text-shadow: 0 0 5px rgba(153, 50, 204, 0.3);
-    }
 
     .hidden {
       display: none !important;
@@ -642,6 +623,78 @@
       color: var(--text-dim);
       border-top: 1px solid var(--border-color);
       margin-top: 1rem;
+    }
+
+    /* Mobile Responsiveness Improvements */
+    @media (max-width: 767px) {
+      .crafting-table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+      
+      .table-container {
+        max-width: 100vw;
+        margin: 0 -1rem;
+        padding: 0 1rem;
+      }
+      
+      table {
+        font-size: 0.875rem;
+      }
+      
+      th, td {
+        padding: 0.375rem 0.25rem;
+      }
+      
+      .item-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+      
+      .save-image-button {
+        align-self: flex-start;
+      }
+      
+      .crafting-grid {
+        gap: 1rem;
+      }
+    }
+
+    /* Ensure proper viewport settings */
+    @media (max-width: 480px) {
+      .section-title {
+        font-size: 1rem;
+      }
+      
+      .crafting-table-title {
+        font-size: 0.9rem;
+      }
+      
+      .item-title {
+        font-size: 1.1rem;
+      }
+      
+      /* Make buttons more touch-friendly */
+      .button, .save-image-button {
+        padding: 0.625rem 1rem;
+        min-height: 44px; /* Minimum touch target size */
+      }
+    }
+
+    .mobile-table-notice {
+      display: none;
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      padding: 0.25rem 0;
+      text-align: center;
+    }
+
+    @media (max-width: 767px) {
+      .mobile-table-notice {
+        display: block;
+      }
     }
   </style>
 </head>
@@ -1197,6 +1250,11 @@
           // Update components table
           componentsTableEl.innerHTML = '';
 
+          // Add a responsive wrapper for mobile
+          if (window.innerWidth <= 767) {
+            componentsTableEl.innerHTML = '<div class="mobile-table-notice">Swipe horizontally to see all data →</div>';
+          }
+
           // Check if any item has submaterials
           let hasSubMaterials = false;
           currentItem.items.forEach(item => {
@@ -1378,8 +1436,6 @@
         case 'Polyester': return 'polyester-color';
         case 'Wooden planks': return 'wooden-color';
         case 'Canister (petrol)': return 'petrol-color';
-        case 'Special gun Barrel': return 'special-gun-barrel-color';
-        case 'Special rotor': return 'special-rotor-color';
         default: return '';
       }
     }
