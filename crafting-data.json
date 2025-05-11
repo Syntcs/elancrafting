@@ -2896,7 +2896,7 @@
                   },
                   {
                     "name": "Canister (petrol)",
-                    "quantity": 18
+                    "quantity": 810
                   }
                 ],
                 "subMaterials": {
@@ -2944,7 +2944,7 @@
               },
               {
                 "name": "Canister (petrol)",
-                "quantity": 180
+                "quantity": 972
               }
             ],
             "imageUrl": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-viUmtxHHOsQ5YWsrZWjZ1uheFjmlPT.png"
