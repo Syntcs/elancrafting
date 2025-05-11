@@ -310,6 +310,10 @@
 
     .table-container {
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      overflow-scrolling: touch;
+      max-width: 100%;
+      position: relative;
     }
 
     table {
@@ -633,9 +637,14 @@
       }
       
       .table-container {
-        max-width: 100vw;
-        margin: 0 -1rem;
-        padding: 0 1rem;
+        max-width: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        overflow-scrolling: touch;
+        position: relative;
       }
       
       table {
@@ -679,20 +688,6 @@
       .button, .save-image-button {
         padding: 0.625rem 1rem;
         min-height: 44px; /* Minimum touch target size */
-      }
-    }
-
-    .mobile-table-notice {
-      display: none;
-      color: var(--text-dim);
-      font-size: 0.75rem;
-      padding: 0.25rem 0;
-      text-align: center;
-    }
-
-    @media (max-width: 767px) {
-      .mobile-table-notice {
-        display: block;
       }
     }
   </style>
@@ -1248,11 +1243,6 @@
           
           // Update components table
           componentsTableEl.innerHTML = '';
-
-          // Add a responsive wrapper for mobile
-          if (window.innerWidth <= 767) {
-            componentsTableEl.innerHTML = '<div class="mobile-table-notice">Swipe horizontally to see all data →</div>';
-          }
 
           // Check if any item has submaterials
           let hasSubMaterials = false;
