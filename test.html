@@ -339,21 +339,21 @@
     }
 
     .preview-container {
-  padding: 1rem;
-  border-radius: 0.25rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 150px; /* Keep minimum height */
-}
+      padding: 1rem;
+      border-radius: 0.25rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 150px; /* Keep minimum height */
+    }
 
     .preview-image {
-  max-width: 100%;
-  max-height: 200px;
-  object-fit: contain;
-  display: block; /* Ensure block display */
-  margin: 0 auto; /* Center the image */
-}
+      max-width: 100%;
+      max-height: 200px;
+      object-fit: contain;
+      display: block; /* Ensure block display */
+      margin: 0 auto; /* Center the image */
+    }
 
     .iron-color { color: var(--iron-color); }
     .copper-color { color: var(--copper-color); }
@@ -639,12 +639,53 @@
       .table-container {
         max-width: 100%;
         width: 100%;
-        margin: 0;
-        padding: 0;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         overflow-scrolling: touch;
         position: relative;
+      }
+      
+      /* Mobile-specific table styles */
+      .mobile-friendly-table {
+        display: block;
+        width: 100%;
+      }
+      
+      .mobile-friendly-table .mobile-row {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1rem;
+        background-color: var(--bg-light);
+        border-radius: 0.25rem;
+        overflow: hidden;
+      }
+      
+      .mobile-friendly-table .mobile-row-header {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem;
+        background-color: var(--bg-medium);
+        font-weight: bold;
+      }
+      
+      .mobile-friendly-table .mobile-row-content {
+        padding: 0.5rem;
+      }
+      
+      .mobile-friendly-table .mobile-row-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.375rem 0;
+        border-bottom: 1px solid var(--border-color);
+      }
+      
+      .mobile-friendly-table .mobile-row-item:last-child {
+        border-bottom: none;
+      }
+      
+      .mobile-friendly-table .mobile-label {
+        font-weight: 600;
+        margin-right: 0.5rem;
       }
       
       table {
@@ -1134,6 +1175,134 @@
       updateUI();
     }
 
+    // Create mobile-friendly table for components
+    function createMobileComponentsTable(currentItem) {
+      const container = document.createElement('div');
+      container.className = 'mobile-friendly-table';
+      
+      // Check if any item has submaterials
+      let hasSubMaterials = false;
+      currentItem.items.forEach(item => {
+        const hasItemSubMaterials = item.subMaterials && Object.keys(item.subMaterials).length > 0;
+        if (hasItemSubMaterials) {
+          hasSubMaterials = true;
+        }
+      });
+      
+      // Process each component
+      currentItem.items.forEach((item, itemIndex) => {
+        const rowEl = document.createElement('div');
+        rowEl.className = 'mobile-row';
+        
+        // Create header with item name and quantity
+        const headerEl = document.createElement('div');
+        headerEl.className = 'mobile-row-header';
+        headerEl.innerHTML = `
+          <div>${item.name}</div>
+          <div>Qty: ${item.quantity}</div>
+        `;
+        rowEl.appendChild(headerEl);
+        
+        // Create content section for materials
+        const contentEl = document.createElement('div');
+        contentEl.className = 'mobile-row-content';
+        
+        // Add materials
+        if (item.materials.length > 0) {
+          item.materials.forEach(material => {
+            const materialEl = document.createElement('div');
+            materialEl.className = 'mobile-row-item';
+            
+            materialEl.innerHTML = `
+              <div>
+                <span class="mobile-label">Material:</span>
+                <span class="${getMaterialColorClass(material.name)}">${material.name}</span>
+              </div>
+              <div>
+                <span class="mobile-label">Qty:</span>
+                <span>${material.quantity}</span>
+              </div>
+            `;
+            
+            contentEl.appendChild(materialEl);
+            
+            // Add submaterials if they exist
+            if (hasSubMaterials && item.subMaterials && item.subMaterials[material.name] && item.subMaterials[material.name].length > 0) {
+              item.subMaterials[material.name].forEach(subMaterial => {
+                const subMaterialEl = document.createElement('div');
+                subMaterialEl.className = 'mobile-row-item';
+                subMaterialEl.style.paddingLeft = '1rem';
+                
+                subMaterialEl.innerHTML = `
+                  <div>
+                    <span class="mobile-label">→ Submaterial:</span>
+                    <span class="${getMaterialColorClass(subMaterial.name)}">${subMaterial.name}</span>
+                  </div>
+                  <div>
+                    <span class="mobile-label">Qty:</span>
+                    <span>${subMaterial.quantity}</span>
+                  </div>
+                `;
+                
+                contentEl.appendChild(subMaterialEl);
+              });
+            }
+          });
+        } else {
+          const emptyEl = document.createElement('div');
+          emptyEl.className = 'mobile-row-item';
+          emptyEl.innerHTML = '<div>No materials required</div>';
+          contentEl.appendChild(emptyEl);
+        }
+        
+        rowEl.appendChild(contentEl);
+        container.appendChild(rowEl);
+      });
+      
+      return container;
+    }
+
+    // Create mobile-friendly table for total materials
+    function createMobileMaterialsTable(materials) {
+      const container = document.createElement('div');
+      container.className = 'mobile-friendly-table';
+      
+      const rowEl = document.createElement('div');
+      rowEl.className = 'mobile-row';
+      
+      // Create header
+      const headerEl = document.createElement('div');
+      headerEl.className = 'mobile-row-header';
+      headerEl.innerHTML = `<div>Total Materials</div>`;
+      rowEl.appendChild(headerEl);
+      
+      // Create content section for materials
+      const contentEl = document.createElement('div');
+      contentEl.className = 'mobile-row-content';
+      
+      // Add materials
+      materials.forEach(material => {
+        const materialEl = document.createElement('div');
+        materialEl.className = 'mobile-row-item';
+        
+        materialEl.innerHTML = `
+          <div>
+            <span class="${getMaterialColorClass(material.name)}">${material.name}</span>
+          </div>
+          <div>
+            <span>${material.quantity}</span>
+          </div>
+        `;
+        
+        contentEl.appendChild(materialEl);
+      });
+      
+      rowEl.appendChild(contentEl);
+      container.appendChild(rowEl);
+      
+      return container;
+    }
+
     // Update the UI based on current state
     function updateUI() {
       if (!dataLoaded) return;
@@ -1241,125 +1410,103 @@
           itemImageEl.src = currentItem.imageUrl;
           itemImageEl.alt = currentItem.title;
           
-          // Update components table
-          componentsTableEl.innerHTML = '';
-
-          // Check if any item has submaterials
-          let hasSubMaterials = false;
-          currentItem.items.forEach(item => {
-            const hasItemSubMaterials = item.subMaterials && Object.keys(item.subMaterials).length > 0;
-            if (hasItemSubMaterials) {
-              hasSubMaterials = true;
-            }
-          });
-
-          // Update table headers based on whether submaterials exist
-          const tableHeaders = document.querySelector('.components-table thead tr');
-          tableHeaders.innerHTML = hasSubMaterials ? 
-            `<th>Item</th>
-            <th class="text-center">Quantity</th>
-            <th>Material</th>
-            <th class="text-center">Quantity</th>
-            <th>Material</th>
-            <th class="text-center">Quantity</th>` :
-            `<th>Item</th>
-            <th class="text-center">Quantity</th>
-            <th>Material</th>
-            <th class="text-center">Quantity</th>`;
-
-          // Process each component
-          for (let itemIndex = 0; itemIndex < currentItem.items.length; itemIndex++) {
-            const item = currentItem.items[itemIndex];
+          // Check if we're on mobile
+          const isMobile = window.innerWidth <= 767;
+          
+          if (isMobile) {
+            // Create mobile-friendly tables
+            const componentsContainer = document.querySelector('.table-container:first-of-type');
+            const materialsContainer = document.querySelector('.table-container:last-of-type');
             
-            // Create the first row element
-            const firstRow = document.createElement('tr');
+            // Clear existing content
+            componentsContainer.innerHTML = '';
+            materialsContainer.innerHTML = '';
+            
+            // Add mobile-friendly tables
+            componentsContainer.appendChild(createMobileComponentsTable(currentItem));
+            materialsContainer.appendChild(createMobileMaterialsTable(currentItem.totalMaterials));
+          } else {
+            // Update components table for desktop
+            componentsTableEl.innerHTML = '';
 
-            // First two columns are always the component name and quantity
-            let firstRowHTML = `
-              <td>${item.name}</td>
-              <td class="text-center">${item.quantity}</td>
-            `;
-
-            // Add the first material
-            if (item.materials.length > 0) {
-              firstRowHTML += `
-                <td class="${getMaterialColorClass(item.materials[0].name)}">${item.materials[0].name}</td>
-                <td class="text-center">${item.materials[0].quantity}</td>
-              `;
-              
-              // Check if this material has submaterials and if we're showing submaterial columns
-              if (hasSubMaterials && item.subMaterials && item.subMaterials[item.materials[0].name] && item.subMaterials[item.materials[0].name].length > 0) {
-                firstRowHTML += `
-                  <td class="${getMaterialColorClass(item.subMaterials[item.materials[0].name][0].name)}">${item.subMaterials[item.materials[0].name][0].name}</td>
-                  <td class="text-center">${item.subMaterials[item.materials[0].name][0].quantity}</td>
-                `;
-              } else if (hasSubMaterials) {
-                // Only add empty cells if we're showing submaterial columns
-                firstRowHTML += `
-                  <td></td>
-                  <td></td>
-                `;
+            // Check if any item has submaterials
+            let hasSubMaterials = false;
+            currentItem.items.forEach(item => {
+              const hasItemSubMaterials = item.subMaterials && Object.keys(item.subMaterials).length > 0;
+              if (hasItemSubMaterials) {
+                hasSubMaterials = true;
               }
-            } else {
-              firstRowHTML += `
-                <td></td>
-                <td></td>
-              `;
+            });
+
+            // Update table headers based on whether submaterials exist
+            const tableHeaders = document.querySelector('.components-table thead tr');
+            tableHeaders.innerHTML = hasSubMaterials ? 
+              `<th>Item</th>
+              <th class="text-center">Quantity</th>
+              <th>Material</th>
+              <th class="text-center">Quantity</th>
+              <th>Material</th>
+              <th class="text-center">Quantity</th>` :
+              `<th>Item</th>
+              <th class="text-center">Quantity</th>
+              <th>Material</th>
+              <th class="text-center">Quantity</th>`;
+
+            // Process each component
+            for (let itemIndex = 0; itemIndex < currentItem.items.length; itemIndex++) {
+              const item = currentItem.items[itemIndex];
               
-              // Only add empty cells for submaterials if we're showing those columns
-              if (hasSubMaterials) {
+              // Create the first row element
+              const firstRow = document.createElement('tr');
+
+              // First two columns are always the component name and quantity
+              let firstRowHTML = `
+                <td>${item.name}</td>
+                <td class="text-center">${item.quantity}</td>
+              `;
+
+              // Add the first material
+              if (item.materials.length > 0) {
                 firstRowHTML += `
-                  <td></td>
-                  <td></td>
-                `;
-              }
-            }
-            
-            firstRow.innerHTML = firstRowHTML;
-            componentsTableEl.appendChild(firstRow);
-            
-            // Add rows for additional submaterials of the first material
-            if (hasSubMaterials && item.materials.length > 0 && item.subMaterials && item.subMaterials[item.materials[0].name] && item.subMaterials[item.materials[0].name].length > 1) {
-              for (let i = 1; i < item.subMaterials[item.materials[0].name].length; i++) {
-                const subMaterial = item.subMaterials[item.materials[0].name][i];
-                const subRow = document.createElement('tr');
-                subRow.innerHTML = `
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td class="${getMaterialColorClass(subMaterial.name)}">${subMaterial.name}</td>
-                  <td class="text-center">${subMaterial.quantity}</td>
-                `;
-                componentsTableEl.appendChild(subRow);
-              }
-            }
-            
-            // Add rows for additional materials
-            for (let i = 1; i < item.materials.length; i++) {
-              const material = item.materials[i];
-              const materialRow = document.createElement('tr');
-              
-              let materialRowHTML = `
-                <td></td>
-                <td></td>
-                <td class="${getMaterialColorClass(material.name)}">${material.name}</td>
-                <td class="text-center">${material.quantity}</td>
-              `;
-              
-              // Check if this material has submaterials
-              if (hasSubMaterials && item.subMaterials && item.subMaterials[material.name] && item.subMaterials[material.name].length > 0) {
-                materialRowHTML += `
-                  <td class="${getMaterialColorClass(item.subMaterials[material.name][0].name)}">${item.subMaterials[material.name][0].name}</td>
-                  <td class="text-center">${item.subMaterials[material.name][0].quantity}</td>
+                  <td class="${getMaterialColorClass(item.materials[0].name)}">${item.materials[0].name}</td>
+                  <td class="text-center">${item.materials[0].quantity}</td>
                 `;
                 
-                materialRow.innerHTML = materialRowHTML;
-                componentsTableEl.appendChild(materialRow);
+                // Check if this material has submaterials and if we're showing submaterial columns
+                if (hasSubMaterials && item.subMaterials && item.subMaterials[item.materials[0].name] && item.subMaterials[item.materials[0].name].length > 0) {
+                  firstRowHTML += `
+                    <td class="${getMaterialColorClass(item.subMaterials[item.materials[0].name][0].name)}">${item.subMaterials[item.materials[0].name][0].name}</td>
+                    <td class="text-center">${item.subMaterials[item.materials[0].name][0].quantity}</td>
+                  `;
+                } else if (hasSubMaterials) {
+                  // Only add empty cells if we're showing submaterial columns
+                  firstRowHTML += `
+                    <td></td>
+                    <td></td>
+                  `;
+                }
+              } else {
+                firstRowHTML += `
+                  <td></td>
+                  <td></td>
+                `;
                 
-                // Add rows for additional submaterials
-                for (let j = 1; j < item.subMaterials[material.name].length; j++) {
-                  const subMaterial = item.subMaterials[material.name][j];
+                // Only add empty cells for submaterials if we're showing those columns
+                if (hasSubMaterials) {
+                  firstRowHTML += `
+                    <td></td>
+                    <td></td>
+                  `;
+                }
+              }
+              
+              firstRow.innerHTML = firstRowHTML;
+              componentsTableEl.appendChild(firstRow);
+              
+              // Add rows for additional submaterials of the first material
+              if (hasSubMaterials && item.materials.length > 0 && item.subMaterials && item.subMaterials[item.materials[0].name] && item.subMaterials[item.materials[0].name].length > 1) {
+                for (let i = 1; i < item.subMaterials[item.materials[0].name].length; i++) {
+                  const subMaterial = item.subMaterials[item.materials[0].name][i];
                   const subRow = document.createElement('tr');
                   subRow.innerHTML = `
                     <td></td>
@@ -1371,40 +1518,79 @@
                   `;
                   componentsTableEl.appendChild(subRow);
                 }
-              } else if (hasSubMaterials) {
-                // Only add empty cells if we're showing submaterial columns
-                materialRowHTML += `
+              }
+              
+              // Add rows for additional materials
+              for (let i = 1; i < item.materials.length; i++) {
+                const material = item.materials[i];
+                const materialRow = document.createElement('tr');
+                
+                let materialRowHTML = `
                   <td></td>
                   <td></td>
+                  <td class="${getMaterialColorClass(material.name)}">${material.name}</td>
+                  <td class="text-center">${material.quantity}</td>
                 `;
-                materialRow.innerHTML = materialRowHTML;
-                componentsTableEl.appendChild(materialRow);
-              } else {
-                // No submaterial columns to add
-                materialRow.innerHTML = materialRowHTML;
-                componentsTableEl.appendChild(materialRow);
+                
+                // Check if this material has submaterials
+                if (hasSubMaterials && item.subMaterials && item.subMaterials[material.name] && item.subMaterials[material.name].length > 0) {
+                  materialRowHTML += `
+                    <td class="${getMaterialColorClass(item.subMaterials[material.name][0].name)}">${item.subMaterials[material.name][0].name}</td>
+                    <td class="text-center">${item.subMaterials[material.name][0].quantity}</td>
+                  `;
+                  
+                  materialRow.innerHTML = materialRowHTML;
+                  componentsTableEl.appendChild(materialRow);
+                  
+                  // Add rows for additional submaterials
+                  for (let j = 1; j < item.subMaterials[material.name].length; j++) {
+                    const subMaterial = item.subMaterials[material.name][j];
+                    const subRow = document.createElement('tr');
+                    subRow.innerHTML = `
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td class="${getMaterialColorClass(subMaterial.name)}">${subMaterial.name}</td>
+                      <td class="text-center">${subMaterial.quantity}</td>
+                    `;
+                    componentsTableEl.appendChild(subRow);
+                  }
+                } else if (hasSubMaterials) {
+                  // Only add empty cells if we're showing submaterial columns
+                  materialRowHTML += `
+                    <td></td>
+                    <td></td>
+                  `;
+                  materialRow.innerHTML = materialRowHTML;
+                  componentsTableEl.appendChild(materialRow);
+                } else {
+                  // No submaterial columns to add
+                  materialRow.innerHTML = materialRowHTML;
+                  componentsTableEl.appendChild(materialRow);
+                }
+              }
+              
+              // Add a separator row if this is not the last item
+              if (itemIndex < currentItem.items.length - 1) {
+                const separatorRow = document.createElement('tr');
+                const colSpan = hasSubMaterials ? 6 : 4;
+                separatorRow.innerHTML = `<td colspan="${colSpan}" class="separator-row"></td>`;
+                componentsTableEl.appendChild(separatorRow);
               }
             }
             
-            // Add a separator row if this is not the last item
-            if (itemIndex < currentItem.items.length - 1) {
-              const separatorRow = document.createElement('tr');
-              const colSpan = hasSubMaterials ? 6 : 4;
-              separatorRow.innerHTML = `<td colspan="${colSpan}" class="separator-row"></td>`;
-              componentsTableEl.appendChild(separatorRow);
-            }
+            // Update materials table for desktop
+            materialsTableEl.innerHTML = '';
+            currentItem.totalMaterials.forEach(material => {
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                <td class="${getMaterialColorClass(material.name)}">${material.name}</td>
+                <td class="text-center">${material.quantity}</td>
+              `;
+              materialsTableEl.appendChild(row);
+            });
           }
-          
-          // Update materials table
-          materialsTableEl.innerHTML = '';
-          currentItem.totalMaterials.forEach(material => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-              <td class="${getMaterialColorClass(material.name)}">${material.name}</td>
-              <td class="text-center">${material.quantity}</td>
-            `;
-            materialsTableEl.appendChild(row);
-          });
           
           itemDisplayEl.classList.remove('hidden');
         }
@@ -1570,6 +1756,219 @@
           
           // Create a clone of the element to modify for the image
           const clonedEl = craftingTableEl.cloneNode(true);
+          
+          // Force desktop layout for the image even on mobile
+          const isMobile = window.innerWidth <= 767;
+          if (isMobile) {
+            // Get the current item
+            const allItems = getAllItems();
+            const currentItem = allItems.find(item => item.id === selectedItem);
+            
+            if (currentItem) {
+              // Replace mobile tables with desktop tables in the clone
+              const componentsContainer = clonedEl.querySelector('.table-container:first-of-type');
+              const materialsContainer = clonedEl.querySelector('.table-container:last-of-type');
+              
+              // Clear existing content
+              componentsContainer.innerHTML = '';
+              materialsContainer.innerHTML = '';
+              
+              // Create desktop-style tables
+              const componentsTable = document.createElement('table');
+              componentsTable.className = 'components-table';
+              
+              // Check if any item has submaterials
+              let hasSubMaterials = false;
+              currentItem.items.forEach(item => {
+                const hasItemSubMaterials = item.subMaterials && Object.keys(item.subMaterials).length > 0;
+                if (hasItemSubMaterials) {
+                  hasSubMaterials = true;
+                }
+              });
+              
+              // Add table headers
+              const tableHead = document.createElement('thead');
+              tableHead.innerHTML = hasSubMaterials ? 
+                `<tr>
+                  <th>Item</th>
+                  <th class="text-center">Quantity</th>
+                  <th>Material</th>
+                  <th class="text-center">Quantity</th>
+                  <th>Material</th>
+                  <th class="text-center">Quantity</th>
+                </tr>` :
+                `<tr>
+                  <th>Item</th>
+                  <th class="text-center">Quantity</th>
+                  <th>Material</th>
+                  <th class="text-center">Quantity</th>
+                </tr>`;
+              componentsTable.appendChild(tableHead);
+              
+              // Create table body
+              const tableBody = document.createElement('tbody');
+              
+              // Process each component
+              for (let itemIndex = 0; itemIndex < currentItem.items.length; itemIndex++) {
+                const item = currentItem.items[itemIndex];
+                
+                // Create the first row element
+                const firstRow = document.createElement('tr');
+                
+                // First two columns are always the component name and quantity
+                let firstRowHTML = `
+                  <td>${item.name}</td>
+                  <td class="text-center">${item.quantity}</td>
+                `;
+                
+                // Add the first material
+                if (item.materials.length > 0) {
+                  firstRowHTML += `
+                    <td class="${getMaterialColorClass(item.materials[0].name)}">${item.materials[0].name}</td>
+                    <td class="text-center">${item.materials[0].quantity}</td>
+                  `;
+                  
+                  // Check if this material has submaterials and if we're showing submaterial columns
+                  if (hasSubMaterials && item.subMaterials && item.subMaterials[item.materials[0].name] && item.subMaterials[item.materials[0].name].length > 0) {
+                    firstRowHTML += `
+                      <td class="${getMaterialColorClass(item.subMaterials[item.materials[0].name][0].name)}">${item.subMaterials[item.materials[0].name][0].name}</td>
+                      <td class="text-center">${item.subMaterials[item.materials[0].name][0].quantity}</td>
+                    `;
+                  } else if (hasSubMaterials) {
+                    // Only add empty cells if we're showing submaterial columns
+                    firstRowHTML += `
+                      <td></td>
+                      <td></td>
+                    `;
+                  }
+                } else {
+                  firstRowHTML += `
+                    <td></td>
+                    <td></td>
+                  `;
+                  
+                  // Only add empty cells for submaterials if we're showing those columns
+                  if (hasSubMaterials) {
+                    firstRowHTML += `
+                      <td></td>
+                      <td></td>
+                    `;
+                  }
+                }
+                
+                firstRow.innerHTML = firstRowHTML;
+                tableBody.appendChild(firstRow);
+                
+                // Add rows for additional submaterials of the first material
+                if (hasSubMaterials && item.materials.length > 0 && item.subMaterials && item.subMaterials[item.materials[0].name] && item.subMaterials[item.materials[0].name].length > 1) {
+                  for (let i = 1; i < item.subMaterials[item.materials[0].name].length; i++) {
+                    const subMaterial = item.subMaterials[item.materials[0].name][i];
+                    const subRow = document.createElement('tr');
+                    subRow.innerHTML = `
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td class="${getMaterialColorClass(subMaterial.name)}">${subMaterial.name}</td>
+                      <td class="text-center">${subMaterial.quantity}</td>
+                    `;
+                    tableBody.appendChild(subRow);
+                  }
+                }
+                
+                // Add rows for additional materials
+                for (let i = 1; i < item.materials.length; i++) {
+                  const material = item.materials[i];
+                  const materialRow = document.createElement('tr');
+                  
+                  let materialRowHTML = `
+                    <td></td>
+                    <td></td>
+                    <td class="${getMaterialColorClass(material.name)}">${material.name}</td>
+                    <td class="text-center">${material.quantity}</td>
+                  `;
+                  
+                  // Check if this material has submaterials
+                  if (hasSubMaterials && item.subMaterials && item.subMaterials[material.name] && item.subMaterials[material.name].length > 0) {
+                    materialRowHTML += `
+                      <td class="${getMaterialColorClass(item.subMaterials[material.name][0].name)}">${item.subMaterials[material.name][0].name}</td>
+                      <td class="text-center">${item.subMaterials[material.name][0].quantity}</td>
+                    `;
+                    
+                    materialRow.innerHTML = materialRowHTML;
+                    tableBody.appendChild(materialRow);
+                    
+                    // Add rows for additional submaterials
+                    for (let j = 1; j < item.subMaterials[material.name].length; j++) {
+                      const subMaterial = item.subMaterials[material.name][j];
+                      const subRow = document.createElement('tr');
+                      subRow.innerHTML = `
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="${getMaterialColorClass(subMaterial.name)}">${subMaterial.name}</td>
+                        <td class="text-center">${subMaterial.quantity}</td>
+                      `;
+                      tableBody.appendChild(subRow);
+                    }
+                  } else if (hasSubMaterials) {
+                    // Only add empty cells if we're showing submaterial columns
+                    materialRowHTML += `
+                      <td></td>
+                      <td></td>
+                    `;
+                    materialRow.innerHTML = materialRowHTML;
+                    tableBody.appendChild(materialRow);
+                  } else {
+                    // No submaterial columns to add
+                    materialRow.innerHTML = materialRowHTML;
+                    tableBody.appendChild(materialRow);
+                  }
+                }
+                
+                // Add a separator row if this is not the last item
+                if (itemIndex < currentItem.items.length - 1) {
+                  const separatorRow = document.createElement('tr');
+                  const colSpan = hasSubMaterials ? 6 : 4;
+                  separatorRow.innerHTML = `<td colspan="${colSpan}" class="separator-row"></td>`;
+                  tableBody.appendChild(separatorRow);
+                }
+              }
+              
+              componentsTable.appendChild(tableBody);
+              componentsContainer.appendChild(componentsTable);
+              
+              // Create materials table
+              const materialsTable = document.createElement('table');
+              const materialsTableHead = document.createElement('thead');
+              materialsTableHead.innerHTML = `
+                <tr>
+                  <th>Material</th>
+                  <th class="text-center">Quantity</th>
+                </tr>
+              `;
+              materialsTable.appendChild(materialsTableHead);
+              
+              const materialsTableBody = document.createElement('tbody');
+              currentItem.totalMaterials.forEach(material => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                  <td class="${getMaterialColorClass(material.name)}">${material.name}</td>
+                  <td class="text-center">${material.quantity}</td>
+                `;
+                materialsTableBody.appendChild(row);
+              });
+              
+              materialsTable.appendChild(materialsTableBody);
+              materialsContainer.appendChild(materialsTable);
+              
+              // Force desktop layout for the crafting grid
+              const craftingGridEl = clonedEl.querySelector('.crafting-grid');
+              craftingGridEl.style.display = 'grid';
+              craftingGridEl.style.gridTemplateColumns = '3fr 1fr';
+            }
+          }
           
           // Add website URL to the bottom
           const websiteUrlEl = document.createElement('div');
